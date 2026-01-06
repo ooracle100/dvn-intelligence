@@ -1,0 +1,3437 @@
+
+================================================================================
+DVN INTELLIGENCE - DATA QUALITY RECONCILIATION REPORT
+================================================================================
+
+Generated: 2025-12-18 13:48:07
+Input: matched_complete.json
+Output: dvn_data_final.json
+
+FLIPSIDE SNAPSHOT STATUS:
+  Total transactions: 3514
+  Marked as delivered: 2026
+  Marked as sent: 1488
+  Other status: 0
+
+LAYERZEROSCAN VERIFICATION:
+  Transactions validated: 1488
+  API errors (unable to verify): 0
+
+RECONCILIATION RESULTS:
+  ✅ False negatives corrected: 483
+     (Flipside showed "undelivered", but LZScan confirmed "DELIVERED")
+  
+  ❌ True failures confirmed: 0
+     (Both sources agree transaction failed)
+
+CORRECTED METRICS:
+  Total delivered: 2509 (was: 2026)
+  Delivery rate: 71.40%
+False negative rate: 32.46% of "sent"
+================================================================================
+DETAILED STATUS CHANGES (483 transactions)
+================================================================================
+
+TX Hash: 0x87214a51d600b1082f4a5773351ef45b126caccc37ff5faf5ce2e6ff5d897ab8
+OAPP: Fyde
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xa47ceb42e4e23db2e8816489690137bf6cedb87ff47169c5ca80c0df34de1a32
+OAPP: Flare
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xd28a24566189996fb51143fc0b1e092ad132857b49c677bc3252f266d6097015
+OAPP: Unknown
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xda115bc225e35d93ff9e8dd3b936dbcf285408678e3d001daad17983dd64584b
+OAPP: Resolv USD
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x8720c320d0ac02d22ec084af476094ed3b2a7721d04c9fcc44d9a12308c8804f
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x6cf8eed71b1bba248f5568e83b1d5930fa02a788505468a869075e389937f150
+OAPP: Unknown
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x4942683d447bf9ce28b91e0589539b400f3847e45d64801b413d85ac92d5f8ec
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x027c592928bc89ce79065b20b347dc080e3b6bfb8a6ae7f08ebbbde7c06147fe
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x0c12faec10b10f633793be2867ec6f343a79c58061f4c345c9d12e251ebff127
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x58c7f90118453b615372188a8e681c24eeea5929a244a1c50515deae7e0becf1
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x3f516d1d67e0a07c9ccda40bb2064b3bd98cdd28d46087b57bd09d11c2ef407c
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xc29d4d3831b6d2a633df93356401f69252295663ba70e03603964fcacf373153
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x147d34bfc73824a9065a8398925a45a25094218699c83fb00ba02b7922b72643
+OAPP: King Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xe068e4088121156505b1bc9f24e3ec2da49e3d45a803c7abb25ec655000843a9
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xe0923bd11b7660c9c754d9139ed248001be1b32552778b5975c5cebb12ae87ec
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xfcf5600419de694f527da70a9ee3c8c5aa13172e660437418bfee9085c26e38c
+OAPP: RBTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xa5ada23d86684f5dc8424a33a3d7b324ab7407e179d4267dc53fb2a6b17ac72d
+OAPP: Resolv USD
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x36cdc865fd4935f5c48fa092e238d20f312e862da425c2b682ee4bc31b0082bc
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xd4713dce4eb215d13381451c0bde47403d64859439056fc4df2da7563d7c478b
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x8c57e1308cd8d56252f9402fb893eda77d4101d2fc905a0dba60d69ec0d71780
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x40634c320e91d31a253a7fd5f49d266d9841280d506eb25f16b60f922a1eea37
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x073f9b52cc6fa89d35f19be68a88101900134ed710ea6ffe1a8f1cbfb7270d49
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x01d766a03434427f8badc394d2f3a30912890ed017f08828f0ec804189075045
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x6bf066faeca39705334d66b276dd234a1da9eba60293525202b95e633bad5a4a
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x3276eaa53dff227b5b922a349bd47fb4ae2f80c996a06286b08ada7071b28406
+OAPP: PRFI
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x1d1b2d5ef17ab207c7e9029cd90b89412d2c1f9133dbd847f40468bfd44d96e1
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xe20f006760394dc6ff2da696741680bb1d36439b46cf1a911c0d677af87831b4
+OAPP: KOLZ
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x8f545c6057ca3250ef27444c68d6049432d6b7465e7b311ea34a7914c3571a79
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x15c17665827c33be797a0511d84c24b53e5a9d08ab48dbb44f0dc35c94188d55
+OAPP: Flower
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x4577c8c344749973c0f2cdece34a37f6b24a3dadd8d9dd5f4fcd69029ce9d4c3
+OAPP: Resolv Liquidity Provider Token
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x5ba2a09a402aba9b3df6e74e2248f8f86b40dad6c147a5eb5d61907f57e750f7
+OAPP: Wrapped XTZ
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xb65450081f833975f31603bc820b859f2be54b26dd014dd94a3cb8d009b96435
+OAPP: ISLAND
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x972711a8916147f42406755d2b18c7d0f136b036da7cb5f123456bbe0fa996d1
+OAPP: Resolv USD
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x95f6a71e41caed4c9c9e3c318afaf4fa85ea1a52f2c7ff5d3cae9299020a6f68
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xe966737d9bdd9428d8dbee1dc4cc1f5c92f15a1887515cec6414fadc7cf072f3
+OAPP: Resolv USD
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xd11a41cc81ed2c3e0d4a248ec077dbb979b3c4d1246bc19dbce7b67ffc1aad22
+OAPP: Unknown
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x76046c9183869ff7aac10678347b6e81cda80ce10f68ed5a6c6ff7fe21a88c8c
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x947457b385f6acded963f16e14cd6c157c402e507c1909a12f43a4bd5fb5aa40
+OAPP: Resolv USD
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x44ca3cbb89b0141a9810e8c7237aff4304721d19d6fa2277e8166a16d4f96105
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x005d8994271a518b208426b07c9c1817c4edfb37ad47c7c042aea6d1b969f5b6
+OAPP: HAI-OFT
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xb66e491f3e899ab04c96b481442d7f11e1b0f1e7bd24d7d412381254ce274301
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xe2fc2b8dacfffbd3471b8e276118c7ec89bcae8c1de2d5586dee02efea706914
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x59774da3871612691bed480d9d6a4b4839077550a276b6a4d826dfc2c8ad376d
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xd972e884c4d02a5f18622498ec22886aaec9ec89ae9bae0abca26284e221b624
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xca67a9a52f4afbcd1852341b5fc83a216062da4d7d9f0c0eb6a47303636aaf3e
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xdac22356ab3e44a65e9ca892040612c79f5561d5b07e755e1c11125686f131a0
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xa5903aabe4d9bda5d71eadc5061dba588c7a628217b3511aaf043ff81b79e07e
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xeed956f163b3ac7945d1b2b7bb49b2410dfd26eedaa5debf44627b306d38abb4
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xb790d728af54acc96ceb1de1268af2e14e79675be85a9f12e0f2aae1d9101351
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x82f1f81e17878faaf92d2d086603fa990496f99608f5c7e5ff9aff4093752933
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xa3bc66cd93c9518f5a24ebdadafbf8b7d8d911d7d124cf83ce800ff57d94bf9d
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x16d08b4a61de1e6e75e120cc913bf18d127a1e52bbd23f826e9b1adc54825a18
+OAPP: Unknown
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xbc179d42d87fc2ac082bc32f03e40232961f47eb6ec4dba0ca56a0aaaf794507
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xe1988af20b7a611321fddb3aaafb39ebad1a31235da0fb8e128424efb50ff7b3
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x4c330c5929770b40f8bdb56b800614d450f7b93163b3e37aa07e2f1d504988af
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xd70ff8ffb7347832c03210712e11be3f15c4349c32d480111d4a752aa3571295
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x1026cf5a8d3bad2f1ef3e63fb01d763de34d705be6ae45fa14a1f3946a110142
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x48e89648ad46afa9deba60fa8bd38e86551e70aeca7a4ff4ee76a28ffb4bdc27
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x1919730a521ee8e613cc8d44527719a1982ab7312839b6b06ec89c20c8293271
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x653c8e80f96a1c6f665bf4154de5a9e7409edcc0d4215f6f3b71bece44fcda46
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xcb038219c516fe548d28b3e7f6796af1db6029a02c6e1b73ee597ddd2d65ff90
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xfbcf59e101df08360a409872fb8e17c91ad6e460805cf9fbeec5be470d3726aa
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x12fb3fc1cedf232ace051a15495062f66e019e06f5b0759f220abb3daf9a292f
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x44095331055f290db19656f7ee104afc90f488125a271d14a9696bb2809049c2
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xddc1eac45280b7e2effa04c4d9346f5b88fbe07ed7fd1cef473326c5feb3ea0d
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xc29b2bc3534c806af0a7ee1589ce0d87e1aeb906118a9e3d7eeb13d612237461
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x33cd94a447708527963f46e1c350d2d002adc3f6a001b54db505be89309810ad
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xf35de05a7a242afbc06690e714fcccb14e8908a87cf2543a3584128f1e6cb048
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xb317239b065c4eafabba461e8a9a344b22ac62848ba7efffc12ede3ae7c2b856
+OAPP: SummerToken
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x5938334cfd91fbbba41f26e4dbc6161339d4cd0ce78e7d2da89b5f1345e41651
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xd92da8cfc0efaf2396e84cc3cc39a7ca4c3c399dedfa52b40234868ef346e2d6
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x4dade005e105c0f20450604d6b976262d1c42e28fce5d6a2c5882f0c152c029c
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xf1e7b21f49627bdb2ece00c8696364a12c3d16498ab59239eb6fb5e23267605e
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x7b941a54d20adbfa958533f6f3bff4815911b384088a664bcca63a35a300d673
+OAPP: Mythos
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xaf8390b5deacbadfa43442c5a77c0634eb802d738c812ed55b8ba8e3f100cc0f
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xafeef07245800180ec5af832f19f82876091ac42911af418c66977b7b9edb592
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x912fff032dfe99ca3ac0cb750920490d79e4a81dcc844fbf631da1e0558181a7
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x9cbee455275dc233b7f556ced500a6c0ce4204a7f92aa15a48b933b8d7030639
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x9c183ae982f9a33c2b294b9df6fb18337ef956399b50da4e3a0d90d094fb61e3
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xbafa37579d640c9a3e9c560735948eb266c0883d975acd05c34db746d1393bd8
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xddb4d1513159de41faa58914cfad932efb68b94203928bf0114c81e2b9da673e
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x7d4bbd2a402111fa3a9ffee88a3358da28461ac244b6004dd47e287a0bb8ca36
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xe853aa300f2ead31b2b059d8bd721dc2f0265562beaae6ed88566c99d58b6fb0
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x6b254cd0a8b01189fb9de18eb2f22707784a6467f67ac21c168eb2165b94a4a2
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x1e58ba4879c6901267923964470109d71dd5b614242e1d63e7e424e84aceab23
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x315f4f5e71db851ff10a64509881adaabf18ba5779ee4c2805dfd209fea1cafa
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x20a33819d233c7ada257bbf253410758e42345c3e64da73218116ab5ad85e974
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x83024eb16971b83b9450b107b6eac121469dad53c9a29ea9855118e1321bae29
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xa6800075666e675662040b9410ec9efd1c5c4dba9c3b9557f821328a159be55b
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x455f450480bf53625550d348234220cd608e2fe0e9cb9345bb72e197322caa03
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x1606f48420d14ebb13ff04272cee63f67afe274e5ad860df6a772ed46c6dd985
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xf482a2062aeb3f64afafd61d42e0e4dbfe8f110b7317a817ade438fcdbea1c79
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xf46f7a88ffcf2875036ff1b188c756a00e97dce413c547108d92cbfc403a70ec
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xb25566616dfd4f981a724e21abe5ad0ef1559d13bdcb657422b6e9f041a61c5b
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xf70684d7e2580912926d073de09d6ca6fd99d10f32ca2bd94cad0e2c973ebc6e
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x96e86405cece4afbff52ed6c5acc87e8ab56075945514fbd406fba1eff2fc478
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xb32b433e79b306ac4090d10e05c8cbc01d8bd27b7f1bbaeca37602d46ff2b07e
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x7ad9e1a47ed2c67790815847909d0810390c3a563df895119a262cbc1d95c124
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x5433cd1640a843fc7e9c6f27b94cd19063dc8b5a73ca128d6b3d8b11c80572a9
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xfa5eadf498ca7e49e9783815043fa0518bbe035c90be01a1ff2d839da7d926a1
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x919feabe862b1dd184b525f3d078c36108b6c1516c1d4fca1acd1343ac33d0d6
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x4327a190209be9b31374a7f479e0ecb381830ee74cacaafc2056611f09bedf43
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x2e7c1778ef40ccc9085a92d7d6a4e5d208b24a7d43b42d783192d80c5ff203c7
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x6d317676dfe75556f8c75291558f666847a72642e3cee7a1842561b5787b8044
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x4119e42afb947ee71010fd4191fde97aff2a919e1221055d89bbe58d102fc0fe
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x4ce6c3b24149f539525fcc1006a768cc10493be12f48a8330917ebc2d493a212
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x88fa2f8bd4b29034995cb80acc637c1d77ffde7b537ba9dc12863336260efbf0
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xc9946fe6a8af8804792efde0f678ac54dcfc4d6c683b58504cc96f3e9370206c
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x54760811c973c2e39780e6837e9b1ae1468fbadd77f57c0b649f5b4adc624696
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xa88fa66dab21c315856d131931f1edf327eac6e57558ba6d7982cb23171315d1
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x57119d1f49c76a336d6183ff5c695586bc54552d9fb9eb4afa5b97070c67ede6
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x533eec787e7dfb852b6409da7e20aef0b8f9129ac7e30dbbb78a9e11bb22a3ba
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x0c9a227593b3e42d323ab6a8735434e990efe62ea26ef1f3e7f44e01d18745e9
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x3fed443cc02dc9b2d0a51d32330a2a16483ce8bfe9fa41a13c6834c8af483c54
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x795bf5562be00ab8b47502eb2e0e9b0a1ded2aa67782d7dd6f2d6508ad11242a
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xaa29caa21651770373c2c227458619adf069acece8e83dc1bf203a4bfbcc0cf4
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x2ad382b6355949feaba3619803861b53f94f2640280aba1b84a6ac7f91063fe1
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x57d9da24d1330a1cb60c62241e01285e245c3810978f5fdf054b81834fc081a6
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x92fe8753e16015fbd4bf63fc7dd7d56bae0c50c203aa3dcd72635ff2a301127e
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x548a64532db31ef7bc6269bc20c60f5f3b40cee303e785c1331edd990c316ccd
+OAPP: Parallel Governance Token
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x2ed1ab969bf809dc6da467593ba2efe9d43c59e302de2f67eeb457a7ecb80696
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xc85f52066c380a6ae0ff392e656ddb0f25f90f4f14787be6fb7222557a58062e
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x7dc4d064dfa9a658c7a7800acd0a1d20d2ab995bc00c74ef7a99180c96f1c8ae
+OAPP: UPLAND
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x09745933f5dc3d73a1b389c07300bb0c484e7462712d02f96b927733ed436fb5
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xf0d11c7cc80eac6457e567b1518d8efd5c311053f893a418f1e413f25ed2a460
+OAPP: GLUE
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x2535316c1fcaf06e02e9b55067aa99c074092d85c808089c5618b4040ef0f915
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x200032ce801a8762c45683f2fc2a1fedbb3464523308f9edb0aba7ddeb4c2556
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x7057a2e82bd6e0afaa8d025c33e24271c14ca546e58580a0791dc181bad08bd6
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x0db931f47592663df7ff408a679f6f0dc804dc107298c34754b966b0096a66ae
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x93dda9bb659d7a82a0ed14882729ab4474bcc7eb17cf76ae4d2458eb51b26ad2
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xf093b0a4f2713c4d78b4764793de4cfb9a0996de50760589a7d01841fa752db4
+OAPP: King Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xf134a0a3ee0621f4abe9ed56906ca5e67bc3aa418a6a33b12ec3817f6c392611
+OAPP: GammaSwap
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x1d39868a01db8cb0bbd19fd71c4f64f4f32537c81539ac546bbcd759acd22437
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xba3eec488fb2b4329e052d3c728a689b6b57fc1c7566fe63fc095b73297a8de8
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x0a36b8892cc4c676733ed515f5f1613e4ab3dc24a7602c76a79eb7caf05a22de
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xbae63709865715256def5777c3b44ecf906b518272047fd603ab84fcdc0dc78f
+OAPP: Unknown
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x668d6130ca19a83d1e02b8f4c3f004c1518f97c96776537daa1916ae0b7b83f1
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x52fe1b1809c47e580ee82956a67df7c348ff3bf7b4c93436a3555a08f9ab56e4
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xf7a1215868d2eb636c16e3290db51ba92a0f6d687348689f7e1c5345d5b82334
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xae01e67f179ad52120968547a963cb6da326c5fb7984c8642c30e22b21bb932a
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x9433482cc061e940feeb54b8f9d1076658eba33d5f21560cbccf683e5af23b85
+OAPP: ISKRA TOKEN
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x379298c54785cbfe3c03c4194ef350dc5fbb8baca05f05009092f7e114cdf00e
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xa613cb606650d6c16b6eb4a0cd869986aeaedc8292792ff8801e1067778e522e
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x1bc088cf65459033d9c74ae11dc69d314f4ef49270d46ea9b8c57df6e54b6482
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x79eb8b7fda48eacb02da463b418e5c87f9cb84a6b35fa463475f66ee606aef93
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xa2d1976d2b67b955f8a6bff3a68a87491375908bfe3019880f7e7d0b469004a5
+OAPP: UPLAND
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x8449860340c9eadedd82d040ba9cb38307fd58e548adc2fb664d2c9ad498c598
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x5d5577c2053800aa5e95a9c4df63786b57f30872cc1e91a9183fb63590fbc881
+OAPP: ISKRA TOKEN
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x4ca08c825714e39071a2023903305e4d33f51db6bc10485e109d532020096814
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x62f4879972e1adcd0d1402d9e1dd94dab323d82f2c064e5d5d2ffcb215de63b6
+OAPP: Giza
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xd61566998e5368ba483f240cedc2a95d415792b50ff0c0513c9b5a4d2a4f0943
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x6fc21d1a762cce736baef0df5b93419c41b77207c53e420c27013a8cbd27cdcb
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x251efffa1cbdcc8a8a3050aaf5980def7b77d65bc992159e138efdf8619649a9
+OAPP: ISKRA TOKEN
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xadc061bdb8133f009cbb4b2f7ebe814256188623912e9621576dd5a997164537
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xada262a38fbd6df475aa2f2b3da805163850b6df1cb49e2629ac5a69bb974c0a
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x46eda53b4c43426fb3a0e02f4298ca60651b02dbc7dc14a2d9069657f965a94f
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x828603f22ab272ceb314ccd247a9d3d1f86eb40721ed24abc08454abd1487dd2
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xdec46a724e9d81d2105f0226125f04921eb6fe33a4c1eaf479f0bd3fc3c48b84
+OAPP: Magnify Cash
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xcd03ee94a20831b01e412d35d5b58244805b007ad19c9e533957c2b1d2f9a219
+OAPP: Magnify Cash
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xdd5e528cc87b8f566a671b6c36cf217feecd28eaac122c1fb2dc27f5906a209c
+OAPP: Resolv USD
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x3cc555f911e7a10cd75e4ffdd5b4bf657a32e09b5ce2a68b2e52088b3c1e6337
+OAPP: Magnify Cash
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x2266bec6e1e9b199bb9ee570fa45c39148ca5998c6475f5b2b7b6251a2dc5345
+OAPP: Magnify Cash
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xe9545d0bd242f6d48b9939570a4470c5320255d50fd65ec730d1d6ccf12867f2
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x79e373931805d9f72b906d65ee4b6419c343228174ff0ca7369b3c48487ef7e8
+OAPP: Fyde
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x75fe873cd1af32d77fcc5f90ce175fe0a36fdfcc763f5dbabd5454e4c629842c
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xfd040a1cda8b2a6754e0e1cdd57971f07d7bc5ba4c531056af46965e8cbbb544
+OAPP: Fyde
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xd56b3d6b5283f212bd61645a1a9d51205293c5018231421ac33e9bee308340fe
+OAPP: Mythos
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x3f31920e4aaf27154d542cb0432151b6f2b26280b4d35d192087c87742588d77
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x604711c462a760f4212adf2be45c989baaa5b01c6bf009265d77e13d6e33795f
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x32e6cff4cf017e71cb7b6e3b11ff09efb942914e36840ae1cd8b0a86f8adba02
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x16f141539e12512624fad109f192b21ca669f7d6389ce8c703f7c878f7ccc338
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x5e03c1481fe2bb9d33c3fd20da8518b8aa8c49f9a83ce14e171a53aa52e8fabd
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x9af0870f580aa5b9e4a14c236f05008ce7c286e47f813e2d3f6eb69540f30a73
+OAPP: Resolv USD
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xa7fb2692f3c0c3f9456c10aeff62218e4b3ff5cb23f2bfd67f0f4d1ac5bf268d
+OAPP: Resolv USD
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xa7e21b961a9271d472878241820cdfcc57d655ff6a74ae65117481dc1acfbac3
+OAPP: Mythos
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xf109734c4ddcccc1d843f5f4abaf8d96e6dee494022fb4c252246c2418a75dea
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xdd549634d1e523b527226b60779ec51fcf2fc6e829d10fe1ccef19f456e9c1ca
+OAPP: Parallel Governance Token
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x56b05cac05de3dbd30aee4b0938d3c72ba7d6bd9ac573a940bc0570eea182058
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x7b6a70af403f44c5c556a4e961a0f54cee1cfb951038283c4fdcb57ae419b016
+OAPP: Resolv USD
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x8afa6324664e2adb6a288c5d11b40709e30a42ae6ca479f5819613f692231193
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x33875bf6814a8ed09ee2f9c1d25d0e16ae9a81f8ec60423a369eb28267932d9a
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xd518c26b00368f08655e428926fa22d8c0ab6f284a95f154d320b7991e953ed1
+OAPP: Mythos
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x22b507b3ad5ed9e01f20fbaeea18a71ad8c5867355cc9db28915168310506327
+OAPP: King Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x47275101d63fab9fab8e5647d24d5180ddbbdf6983aab67460e5373818009e68
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x2a45b8aac0b91cdb3248c95b7f90f7cae5e9d37ea8e62c37fcbaf1edf28cbddd
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xddc048ffef0df0ba15c16cb12d8953fe7357768d194e29df0125a6f9aa4bfb66
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x7e349561778ae578f6f22372fdba27eb2b9970b90180439b387f1d4cfce15aa5
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xd945c3b5a1076e622f94404cd0ed6f1983e322829a4f93abec3dd798f45f45c6
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xa2f43b16d50ce6823c6092d9db4ba1258b13ccfe48afdec6b65ae95861bb384b
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x2831fe6c8cc4aa76cbdf89a90329a0c2a5ed28fb16c5e5bbdc2490c866c34dfa
+OAPP: ISKRA TOKEN
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xc71c7f4951a8afa20319a8d1ff46e4dfa3a70f1fd68cccedfb5ad0978455e6f7
+OAPP: ISKRA TOKEN
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x405166227d2698821eaa81f7d693bf4fb7c319a04509916cc7c46c23067184ef
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xfb1473614616c3ee54ae458eaed2b614791c6cefe3293d660bdf93194004e426
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x054568d536c9a298cd0a5c49ec0596002c9cc17a26d70be3376dacfea5b4e071
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xfd0cf95d33d269dc658c5081ac266ba7788a4a9496250103a15115ff970ccf74
+OAPP: Unknown
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xd3477a50a93379140e9395ebf4f7600abe96ec5bd7f96c2e6edc497259b69520
+OAPP: Unknown
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xe9e40620e78983cf31b885292a6eb71720f63e2dbdf2fe77a3a99fc5620a2ebb
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x5820ed0f1a1b9265c23918c8209bafdd27584d85bf97aa972b40460122d20196
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x43dc5a20596322bde607fdab96ac5deb44c6df814e04ee0f1656e2455d404d40
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x6fd306c74e6ea6cc896b1825a21295751db868b6e3d69426715249ca9d98ecae
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xe2c09d546087cdbd86a978c002d2683a2c609b3af8089a44eea28b94482c0a82
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x929a3e0c00bf7a5d514e6db0c79927df574b9bb99eef5b28ecfe048940198e9b
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xfe91312d30c5104b9927ce060e1f8ab4081d9fd05ce86778b116f9533ed7f935
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x7f49c941562a7ba9d753cecdab7d52d3910acfab2dca86019bce110f6b6af224
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xffb6090481669e0b1457cf34df59189b552cad386367ef352cc4daeede29173c
+OAPP: Syrup Token
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xcad9cffb12b85e0549ce363327078b374ee98d52338a7bfe7fe42ad35822d807
+OAPP: Syrup Token
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x6de24a9fa2a818400aaaa5c9de063677ac7d01a708c024f2dfa22ef5765c6169
+OAPP: Syrup Token
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x3c5c24414eeecbd7b38fcd87eb9941d03961841d3835e2734c0c70280905dc2e
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xcf85053432b971639ff827ba70101bc0f5ad1f1a4a2b17a2019cf42e5196c4df
+OAPP: ISKRA TOKEN
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xd915705c61c2aea065383f66cddcf90ea4c315f8f7ab2ca8f834b2ef1b7c4729
+OAPP: ISKRA TOKEN
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xa388c237f57af7fa98d2338ee9c0940852dee811de92a2c829edc3df6ca4102c
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x4de26c2e5f0262fa796cb21619b5e1fc9aca6e0b57da59d3e83757473be20635
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x13ddf4ff4c0e29d5e95a59f7d34c3c937ad5b9e874ffb7cdca0a7a8646b278f0
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xbbbaa677bc571b7162f1a6d7207e7c5e8262339932bcfcf2e98140e7dd4d20a1
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xe3cda870b14894cac267a47b1f95cc7abbc59292dbabf36ba9b9a0488b38d513
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x9c1d8b0454d36c4b2d1ce6612b45520f1fccb54405286dce1be28633ec380b68
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x53bbe2af10550d6c87af82ada3cc3d8473453493d29a618d0c17f7b352942c97
+OAPP: Resolv USD
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x711c8d434ae0c43b09f46464f30d5dc819a9e9c6db4a88a53ade74554b43b045
+OAPP: Lagrange
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x98621939d6b001857a6bbd6abeb9c13df27768d578f6607a5bed29b4bfeb08bf
+OAPP: Resolv USD
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x42cd07757631808283a7cbe2b540939bcd0cfa71656e6b403ee04f121ace583a
+OAPP: Giza
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xe9071bce740f943edd42a7536daebfd9c9b1d5bde1bd48cb30bb2a607742430f
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xdd47f1b0d77701563153177948fe5010c8a4fc2fa488714b4b84e6789dde7cea
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x5ac4df4c7a3c0d6ebf9eaf1441d34030598c8f2b36965b8e091d4bbc2ccbf8ff
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x4c9648ced46e399f05a76127e7581c5fec87d2b13fab8733336db3bd6975a786
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xf2911be36e003d434f969cbadfb5cef7ebc4c066c4cafa40800c76c3cbd4af4e
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x89cc387eba14590c3d4734354d892e56acb561cc7f3bb5a9a1cefdc57ad091a5
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xe3bab012530d7072250ca37a1aea3d96b9303f84099bce833889b23b3bd5e604
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x30ff0cbe46fde0570c73aa7413ae417e9273a3c7090ab28cc28b449e910c8151
+OAPP: Unknown
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xf3b899265d46bf987dda205609c1e1f0e50e5b68c23de74421d1ae193cd47dee
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x68f58ad587797360c5f334701ba9e7416c5740c4dc36e388ff05997c06f2b452
+OAPP: King Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xc123ef6d178fb6103f2f517e9bea57f1cf4d5821f389d2c4e1407df160bacb78
+OAPP: King Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x2af5725cc88115c1f4d6416e532462f598f2b0cc805a66aae9d14bad6c155ba0
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xbbe3dc37f68948b1e98ffa41e51aa5782abc6282e75cfa2eeed4ee5f63c90c53
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x237cbddbe5e0304c683649c523bbe451289b1cbaa408638be3e936191a5e8af9
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x5790910a97665bcfd77e8fc37aedb716a4b1ae633c3ffd87357f42aea0c05e30
+OAPP: Resolv USD
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xa56102b4406a1c052dd3103533d9d418b5c8b4080368ffca802edb477f979af3
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x62be5e28c82cc56192f991ef4029f233a319a8c6681a2862fe69a0749d76c03a
+OAPP: ISKRA TOKEN
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xa63acfce8fdbe9574a0ef49643f5fd7f2f232559c20a50e3f8786019feda9819
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x6c8a63ab8bb01eb88eccb9d2928bf38153e2d3155a7179eb49e23e6aedc6dfca
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x82974cf9ffb3b7d5baf212c841cb661e5d8c69a945a616f91e1a6846ed8384af
+OAPP: King Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xc4db12bf5a49556331691be9ed31003aec22549a7296f75e70a9663fc1972e89
+OAPP: Syrup Token
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xfde49f5370e9e9fac65f5a645fbada48e9f558334e3a3b2e6ac9bbd0eada20f3
+OAPP: Syrup Token
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xc22beca1ff0419847e6a71ee9683399e42f4133525f13e146691fa83141e8e44
+OAPP: Syrup Token
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x87f165b03f977bc45265b21ef3caf1218b4aac11eab3d4114ccbd36e5f894256
+OAPP: Fyde
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xbe25864ab612552575c94da0685a90b86c4ce7291e824431bf4fd01da6e181a9
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x35311fe53ebf89a9830ba9feaedd07157e6bd47266e4e615cb1e37694d964480
+OAPP: ISKRA TOKEN
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x52f12d19d3e162765183731eab2b8e20d1f25fa23dfcf0ef7b474f8c864ab243
+OAPP: Mythos
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xfcb142779350fe14d4dc253d666d0e0d6f6870b5cd2d03e70f5cef5c30cb92d8
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xd4e394743d9fdc343524c32bd8fac28534a4d6094446c01d2746d0dd2272e50e
+OAPP: ISKRA TOKEN
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xef09ad80b80335da5adf2389a50f78068896de2dde7c095bf098fdc2d15754f8
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x420c535bfdfc91b3e292f1b827f8c7f0a4ce489ed0b7dcfd1dd89b9bf978a3d6
+OAPP: Syrup Token
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xfe84fbb3a2b33e2deabad2219f0a976efc0ff7475deaa4b6b90658ae432ab6b8
+OAPP: King Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xcdfa6a60fe67ca1be9716170b5e72f43da861cf249d214ee0908fca5fe86b8b1
+OAPP: ISKRA TOKEN
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x2b53b923120dd7d34c6b11a089e137039fd020d4534439962d15070022dae6d6
+OAPP: ISKRA TOKEN
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x550198741b2d193d5532fcedf2ca7e0bf1f5585ac951d446073016051015cc90
+OAPP: Resolv Liquidity Provider Token
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x5cc6bf24d645a3e1c1508cf173dea85208b6bc2580ae6fa2b96ffe05ba19bef9
+OAPP: Mythos
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xabb729c287921c9dfe98b40ce4cdb52c5c0bcc1e4decc9483fcd30c2b1b3e24a
+OAPP: Wrapped XTZ
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x888bdba1c0e7ae598b858977fbc8dfee0549fbab3d75f0ab646b09322c2f6170
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x95009393a9fb7a852ccd805856036cf1112fa089629f436461a3c7ca169eee34
+OAPP: Unknown
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xa368e88b4ed986443d1ee483113282e451aa522e38d54e037c15bd9edf49eace
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x59c47a835f85f8fce9ca0b5cdb874bd7d0065c66c077b0b37adad7994b7c8546
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x597aa2518a5340e6c59ea93130151d1f6d0032322f0913b49215748a4542f0bf
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x7879e18a12869f094b1af306fba9eb23dfa6c7e022a1986da39ef5c8fdb61099
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x5b4bdacfa5a7c574f5284362dcecd8294452d184a17006d610a24cdc14ba706a
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xbf771107b77410f5595a7f858066123d15d771be6b6c87fc4960223da5770bfb
+OAPP: Resolv USD
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xc45d68c045fcd876bf647cac9a5f0eb7b99606a6b34720b8890c099d7e5c291c
+OAPP: Lagrange
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xff159231147af12bd10d82e73606e7105bdf2d078fe9fb1a989a8cf09c06046b
+OAPP: ISKRA TOKEN
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x5dbcae0f99015df3ab56f5db6bd436121470b684aecc01fc96e5b1167a3da90b
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x4a7c09120972deee20fcb13b84de37cf8aa66bae887546efbf250fce0cb3b665
+OAPP: King Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x83f5b71650fae16a8ea3618877b9368c4ecbd39d6557c58afb738dab37ba8a85
+OAPP: Unknown
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x4ec76a87432650e3d69769f6ab15e9b30ea71d8f38996ec79cdc3031e5563ffc
+OAPP: Fyde
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xf2af7fb117920479abc0154810609ab35fa4b95a3cae7112e4d95984fe683381
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xcb7a763df007b5122b19f4e52624d012f691b3f9e735c71422ee179dfc7ad2a2
+OAPP: Unknown
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xaec727446d96f357922b6c59b2e4733a09bfffcacb74f66bbc15393e8961c944
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x22ed922aadf1d45ecffbbb2669469cdf0539331e1209eeed290d26f9770bca13
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x60bd7a35b0f09314c9aed060134215c7a7d1abea3f8ed858e0429aa87c5e2a36
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xbc5c7db89ec2d367cfe96da675ff8afe7ed1cb4481df8ed25c86395d9b491016
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x7f8044f92416d896c980c7aaa859193efa404cd05deb8f76ded57d4be3430bdf
+OAPP: Parallel Governance Token
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x7ee6db55ead57970a5473d1ae6af0d8baf299f4c74d217d0440d65dcf916415d
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x8532831e58cd657ac10988b290ed9231c7290fd5ef4d736b8219b30337f31a5d
+OAPP: ISKRA TOKEN
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x4373427945b32e01c0769d475508669ed14de39889e2d2ca5eecfad6de0462a6
+OAPP: Unknown
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xc833519dc8d6661e09e3e75b4609f97ae0135b86368a4aa2cbd6f77cb470f88b
+OAPP: ISKRA TOKEN
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xbd6b042ba057f75d156bf3aef590489a8cfe2baf33ac95b74b59e1051a737b51
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x67cad45eb93509c1a19860bb271fd019d28e1d281d9bf3e784cb1593617f6357
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x779ec7fd9057c27bcdfcd4d440232ab70dbc132ba1780bde789a660ad6772786
+OAPP: Unknown
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xdd2f3324990ae92845912042badc4df09475163388ab012ceb1e01edc796eab2
+OAPP: H420
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x1eeddff66cee9fd3291f9b722953f642796e6525e8eb2abbd49bc0b6bd9ce0ba
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x4ce0c1740f0df699e3df7a6ea5e087f4a51d85619138890deb3d2a5b1623a5f3
+OAPP: Unknown
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xe53006855bb0304b5ed010757e46f5b69c7f17596ccee8860dc86043cfa83f86
+OAPP: H420
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x512a765d35d6ce9f27c4986603888fd355acaac931b490cef40b67ad9d6e45cb
+OAPP: H420
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x27433a93ddcf027c26620e7fad47c9ccfaf35e73d4f94d5d61f0c1e5386b61aa
+OAPP: H420
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x4454d28aa39b99adf17365e7377e2b38d7ce46b6cfcfa32d5dd06c595e050fcb
+OAPP: ISKRA TOKEN
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xe7a3bab4e4f857c59ac378dfdceb2e03a06509d408ce5e8cdb12527cc62dedb7
+OAPP: Unknown
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x89933b9e9b0fb1a1148bae4ef4e0cdc9e0d8f20c231c2dc7f077e52819dc3ba1
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x33e96011c6b2e4f8668ca7754a8872c9c0d3a610834e0eb70d4bfc2b3a6c0fb2
+OAPP: Unknown
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x56c8de1888aac61fcf92591c98adcf861a0aa486ffa26133bb38a4c4e176ca42
+OAPP: Lagrange
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xc138b645403d1c44327a5d45a51d44c7e2e3a4c1f9ade5bddbd4a7603f8444a4
+OAPP: ISKRA TOKEN
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xcb04019cd501804edff8cc78e74689ce133c7e2d0fafe0fecb97db8722cab7fe
+OAPP: DogLibre
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x04168f842833770ca306482958e54a815ab6026d99c34dc0d111e989154915b3
+OAPP: Unknown
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x0bdb03c009ef15b4bef629cc02a017f684ee9b8b1717a4ad8adf65f002101748
+OAPP: Unknown
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x07897c4332dc1513f16760129ecc29ebf20ba48337d20ba52697f47a356d3900
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x271fc9b25c6321f5d9763ae40a5c95961962e1130505e119e686c6e86d27aa08
+OAPP: Unknown
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x569775d6c48f0a4bbd1dbec469a1b3212b9fe78c9a182f02e6af1a8fd5995a95
+OAPP: King Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xa23f4a40107f3cf2a442eac26a3fde6da3ec88b45d7cb9bbb88d4ad2f74c1741
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xe97c995b7c6e12a23ce283e6321d49181f70521aef2c48bfda4f8b3bb4049f12
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xd0efc7553a3ddbd4eed08afece3328d5a82aeba5d7b2e2256279df7074fba806
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x50d8a7fa8bc8e5dfea0f5af75dea274ee777ae0e2226aeead7100546013f71d5
+OAPP: H420
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x3fee5b91e0f09bdbdb4673ebdf165cd09e03a1b3da6937ab7e0d3be79c030769
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xe9d188807935842b2f6bd5b1363382110e37bb7528a319e91e8b7959aa90be9d
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x7f7d2ca185bca50915d507844f26d4eadc4f68dc1127d26e635d4f3eb2517c60
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xaa53e9a88b608520d692b02b7fcaa9d2f9883d70edc54515fa0cecddd92b1bca
+OAPP: ISKRA TOKEN
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xc210233c0db87f3832a3ba6a9d2f84374db40637a061d61223b379e751496cb7
+OAPP: Unknown
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xe70fc051bf21a0f8cc5074788fc8fc27b8b7360cc2850fddb94caa8c0bafab71
+OAPP: H420
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x531016699fb6a09a61d17ea647137dae19f17cc310b5a706b8c900b83803cd23
+OAPP: H420
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x708765c1e4f0ef19498f8d8679a7c1b36dc0ea17211e42fa6a9c9ea832924ed2
+OAPP: Unknown
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x4746464849ac4fb0890ac5716afb85c4091a4e829a8913d4a464bacfd40caa2f
+OAPP: King Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xade7d97c11862cb7140c94d840eade791c13090ad280454fcf1963850ad24674
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x79cab1f0cde04c160b74d8a7bba523232c5f6c70bb74b2dbd89d6894da933710
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x6859b10383b63f9d4120c83ac78c26d004d6e54633f27b6ba34c11c82ce51df7
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x27ec06939e49cef5e3aa37c6648e40c251a1f9b40d06af72831fbbaad030fca0
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xc6e003cfa9959b129845934491aecfd9e73b63be68f039876054260c018baebf
+OAPP: Giza
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x0379caf5817c1f33827ddcf4cf9798ab552ee09a6cdd12068099664092054538
+OAPP: Resolv USD
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x4cf63d356ee822ce65ef24d4f558d0eb4f35893f91dabc1db95c398137871a28
+OAPP: ISKRA TOKEN
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x47d59c714ae3675bd4985195f6a0dcf7087469aa16c459998137014f991825d1
+OAPP: Perion Credits
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xe5a7ba2f7240f3ed709638327af122bea4d214d6d74f5322e607089b893d6409
+OAPP: UPLAND
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xa5953bf5f480692bb9a7a10d373a4e7f841c6a998e7ac8f2fbf8f910b0e776d3
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x83b47785be347910b964ac0987210bc11c178e66adfd91ce0a337862dde3c808
+OAPP: UPLAND
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x00e78c61de33f1d8c6533e598c51a6d89d0daf95fd47df6a41ebafbb6bb73195
+OAPP: Resolv USD
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xdad9f8efe11dd7596ffc406fff2d5b185f7382d85b55caf2107ed66c19721a77
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xbfe4cc981fa7f1d66e0bade26c5257eed0cafe0cc322f34099d88502493a5a39
+OAPP: ISKRA TOKEN
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x64435e42da39ece92f128e19992f06e4abca23f2649597206ccb3e94b6ee2aad
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x8f589dda7f0c0ea95a4e4719acb65e799947f90f751198e3c226aa39dff38899
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xead84c573b6d9eb98a3cb19f00411c289364f6942221e76eb16adc5a1e508644
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xa3f69c2bbf0d3724c6852748d598d47fdfeec7854456c5cdbe808767d1cc0d41
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x48f37606eecb4de1451be59bdb62d7960ea8246ad63ba8b4d26220a4200fc2c0
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x0f102d3216dc3ccfc958f14568c7bfc4bf3315199f5e635eb72d9d65af84ed94
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x7e152c0641dabcdf002bd0b1e9f44dcf795add6fc329665a6c1acee556df9180
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x902da54514d06cbeb627ba6e6f7e1459f21a7717e58a3b78d5e95052d28effc7
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xeacd489536a54e8c1a0fb00dc4ea7baafe2f24fda8f06f3fdd310c8a9d8b98df
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x3ad8ae3785deca9ce5f585889cc60a2696f76bf4b3d422bb9cff2fec3a0c3d68
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x89eefdcb0a85056ecd4077da3105f26519a9c2589eb9f585c434a5514c89889d
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x86e44b52f5f865131b72ead907e4d211cbeeab5363ebe13a159a3086a51d196a
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x32b30feb7594a073679c30c83c1624b0788ff822a8a4b3b090b1e6c89d31e90c
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xb9666e8e8ebbbeea832fb542948c44131df38aac25259f9c2260a2b34d2edc95
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xf0af00e77509e06ba0739151c2e44b6c3b75a5efde46505ffd8998e7d89c81e9
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x44e6fe7f9c48dd2aa9097bb8e567607532ec2dd3610a21053eb5bcac63536f7e
+OAPP: GLUE
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x180f811bd17cc22587a1e635f5768c73511e0d31ca4f7264197b475c03812b2f
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xf838ddf29fe5feec78850c13d3b2ef56461eda1c931f6f08aca18f594fc99987
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x88fabc557e9891fc1e26e45e226777f3cabf1b56fc1f80e27b633fa59cf15ba0
+OAPP: ISLAND
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x6348ee3a29f5e1d64dcc21acb392a2b3bd98c1fe61989268f9217fd55441c5da
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xb347c855e1938f0d59b495707a8fc1ffcf8643fa6325deade4f21db1526daf9f
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xf0c18906f57a641edf897ac2e7334f070347ad9da60ff07876a04e0cf3de1ccb
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x95c441ed14aee3c90bb77772fac429293d1a094780d7ebb01ed935fe981648b0
+OAPP: Unknown
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x481a77a673ad735bca0bbec42f88678285e506f7cd5f09d73398593b6e3b7ea7
+OAPP: Resolv USD
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xd32ea22eb9e607f693f663f49415343e002a99212ab415ed08fe2009a6d8b6fc
+OAPP: ISKRA TOKEN
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x8c734e877fd051e988422b834ca7414b065f4fea99d3a635410b21e83fb21529
+OAPP: ISKRA TOKEN
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xda7739e8924d932e44f2c201f84212d9350a785d258419f6001a232193eda30a
+OAPP: ISKRA TOKEN
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x462c4dd1fa9d1c716ff866f98f6b6cad025badba1d7f421b3cf758a1f3e1f22b
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x3950d2b197b5374c11f5bde2221b2ea864f3d899ebfd160b6f7f4fb38eb19e30
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x1907559cf0fa5e71eca4a2ac0963dd3f5978b90836af80b714ed408c8c28bc11
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x52111feab8ead9a06e11f374d002f722b554a5115a436cbf61d82388a9bd327e
+OAPP: Unknown
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x4baa0ade4e865c0e2f822c325d4df0e94a81ae7f080852b62b7c3f0708de3dd5
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x4e098a8beca9bda748061b6cf5dddb9c64ea379acb0b92b8a794e052059760e9
+OAPP: Unknown
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xa53f43e9fef9b9bf113c52c623c8c612eb04e44d814ad9663d6591a348b7b5be
+OAPP: Giza
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xc54657d3b7fca105d72428f60414c1824859bd43da96dc437d4cd6cdf23a0506
+OAPP: ISKRA TOKEN
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xc0d5af60a82bcc3f8d1efa05d2188db793564ffddd1fc8c8b18cc77034df4a72
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xf8dcd35e763c83848059ef2704a0fa7954e0d0911a0afba1640b47e860b67ca8
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xeb098425d9bf0981efb166678186dc16e755b0abc129c433072bf0974da29904
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x0f7a4a191d9a753d0b95fce609b1a68985d25d8b0aae5024d33c8a9479c505ec
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xa3762e68330893f1978ebf6f2109ec72cbac8dee6ee56cbc44206910b684ea3c
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x0e8c9839c06e84d45598a92ae5733dc00f2f498be49d74e6930f750f778ceb17
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xe6c6d1430b5209057c9a2bc0f5ca0a79c4ccd61840819411e4bd2c7ba23fc159
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x48873e7265a96bfce1eb96df63f1702296ebd1233bedfc0050174994fc4b10b1
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xc8a6b4c478bfda2970ebe0cf87f9b5d31a9f53a189f77327ae9177fc33674170
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x272590a6e183c669e40fefeac3f6f99effecc44c1f65d4dd8d92ec4063c89ea8
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x35a256b3e808a5976743c91c032247d0c2d21660c8c0a46e630ec486ac442b6f
+OAPP: Mythos
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xe43b3422b6a515587f51bd67df8fb52677daac47fade31de1cb6c7287f704f4c
+OAPP: Unknown
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xb4e671795ff9df6c0f618c61c626901a8cee6cd19cc71f44f0c8e64be027c4f6
+OAPP: Mythos
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x61c449227ae491f4ac418660d50d7d368712050fa695047072b90734feb08348
+OAPP: Unknown
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x7736d93a2067a4781c3e5c21bf22205cc03a95c614087ebff25ae97fca7362ee
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x1c6b480c2fab7c34a45185f8107192dfe36b7b6a8196e7d0c5ed3847ea6390a0
+OAPP: Giza
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xac650f7955a69bd35964ed26072c024e2945466948ed4ee365954e5077a36ff0
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x80878a9dfb764a43d83d1e642a202433d5cce1023b7aaa595a551afa0fb0d9e9
+OAPP: Unknown
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x2b649ef72912b54efeb9cf28e2d9f39a626caf4996868003a78e136d41eaa6b2
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x36fe232402fba6819bc0b51eb94268ff91213a66a3ddfeef4411d465526bbcaf
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xa6199f2a51f4767871a9954ce4604efac78071f924baff20241a1699c2ea1c7a
+OAPP: Giza
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x6b2ef86cef4bf1a264bae468ef5dce02aee6ba4b37b46a472a7267ab088e69e6
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x3e60b0ab9ec04dbd3d5dbde52a0637a2f190b6fca1545e1528a395240f453afc
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x0ea282b3b32a3c5cad28dfb2736d3b29f178f53a9caf19cb51ac85a8f01d7a40
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x36e702bdc521676631253c3fb1cebaf57873f2b1ec1e04a4b14a298cbe66a2cd
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xdefc07fe2d272eb9e5e847b023888e66d7167746403e8d5f41d6d17a617bd34e
+OAPP: Lagrange
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xe6ac0ca635478ada68603a15f7b8e2895bc3f798fc888993c013dff648a47703
+OAPP: King Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x57330af9a663d733000ebc5a5f015479f721e3e2c3c523d7b07e09429617836e
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xe0e569a990079c91e70b080edc6f13233691037d5f3e9748666737220bc5414c
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x2cad1d1f573e0880022acaf44553e1d881ff3557e244442250418e51f8394c87
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x12e4a4508e1e736335202f853a3d64f00d686d9c3c7089ae7ca68fb25f6c0f87
+OAPP: GammaSwap
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xa33703910c798d05dbc6cde3672282d7534deee430161b410928ef6a5c5429d2
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x8f420541f0fdb4a5107a16e0e1a75c0f16e755a2197224808e9b87812f073bfa
+OAPP: Lagrange
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x1f21e5633ab7cfb0413960da8e8a2b5dc0868fc449cfa7d6d38474aa26fe84cb
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x7d36ae097af6130695d61393fcccdfb9143a38388b829c383503c9349badb724
+OAPP: Silencio
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xaaeacc51ff2cb8be07f82e3c79087500cbf6ec47a54f5134bef09f106031024e
+OAPP: Lagrange
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xe5f58d8cd741c6e2bc060f489efc24d6ddd92ffebe7d0d1293fbc0d1c5eb24e7
+OAPP: GLUE
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x2b91c02c1641beab59b287792a494f050e79450d39013272fc3a70188fedd8b8
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x01b06b384e85a8bea002b7235ab4ffa24a4098ce12b64d2393a24f1d9a27ebda
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xa333fdcb351ba3ce7c534b5f6f10d7790e1b481e2af4ec9a1b2e389d2bc3355a
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xb80f527989843dd8b10740deff6b28c334b31502765a73ebaf3f85d36e0499d8
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x264f281e68d4e1f25d654ec9ef1d7f1d5309640ebde0bb5ac435e07bcd906cc7
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xa5d42eea7489bf60d75f469ad83763a7201f84714fdbb39ef5a845b0ed498666
+OAPP: Resolv USD
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xd9c8cf0a636a0ee8ac0837ab208aec7d4b203c68a843b2828c9bfadc9b494245
+OAPP: Unknown
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x10caf783eeb3960f2db31f59f87a4ce4e8a779aa327b9c95e54645b61b27999b
+OAPP: Unknown
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xed1869eb3dd0adb34cfec505164764a87bbce1b9231083025c83f299a590aad9
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x9148e77f830aeb11f7d73f5b6ea082940b1afcd41b5c3cb2a83cfaffbd7b3610
+OAPP: King Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x1c51373c0c83394d393ed633dbbc64f0a724551cbb9f5a8f13d9df8cd638c38e
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x7229eff8069168e770cbd22ffc2ff6bc38ac3b0ab597c08b3d8ddf1f077e6f9e
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xc296df8c94f296918e056f4c49b868c4a01755d56e97b3faf35e64d2fa9d2a3d
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x0bb10d7687a833303ea107191592b94cae06128d05d29e718835f2c3a2062aa5
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x44c5a016027b8f5dfd03fc00fd8c3d04935c6155c3af837b3345bc91796de0d9
+OAPP: Unknown
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x8e9eec10f59efc1f3272046a6eb0dca322b70a403d4de8d8437163fb05e7dc49
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x61acc6a59d2e81bb2e4f6d3b79570fb6f6d4b3d74a46056827b23bb1577f5ebb
+OAPP: King Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x43dbe2caf419e9b1428691d75500dbdbf36c9199bff380503579baea15f78405
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x985ab87e32039a2d305e3a91f559f5cfd077a9b643f780c64999fdc4fd04160e
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x4b0f55c8e7513590bbbd7fa07d7bb1e0165eff1e7591d076d3853710fd2e80d6
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x5dd59c71a25cf9f496eb681aa124d9e4ef7e53125c5c023957a74ddcae1a9f37
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x1eb32645471f49251b6763a4b091e94165dc784ecab601b17058a7626efc87c6
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x6ffb41804d1a7cc45798ae2e46db84a5b36cafa882ea692d2e2dc2c9febffd0f
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xfaadde24eb22eaade6e8322a4469101d487f71f786ffcc0f9a5bc36be5814169
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x3074a9fe9bf65ff50c26f4535f5a206b5a0097e41d6b73b52fbc5eb309db625d
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x2f8c08fbea2d5ab6e1a9bf32059391969ecd4d3715673a7d8b995bb821413af3
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x3b9a65bc122676539315723575bf7423af5f0b61cebbf58a10f7518375c9883a
+OAPP: Unknown
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x6e246676029021e01e0842685eb32ce5ebb36792d6dbc11efd79f675b82e9b4b
+OAPP: Resolv USD
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xbb0606f23946b85d8a178c99a1c1122b4d04176c85a006817a61fa0608faec26
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xf63193edaabde95797e092f9d6a9ad18bab5b22d0e3e9bda3ffb3400189af28a
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x38886cb7f2a0d3b9c8da240b77cc1660269e9b96be18d9c81da80605ab6c2c24
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x5e1f435a6147b0ef4bf0bead1ad54ab1b9c37faaacf1fb3e3f8c5fec4a839889
+OAPP: Magnify Cash
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x586e4ccf09475a2945144d2e33cc8f48a62586b741d8b3620e13a118f13c34eb
+OAPP: UPLAND
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x065654cbb0aa7b69c113f77fa102e75773ff339a4cdd3ded7e73c3412bebb237
+OAPP: Magnify Cash
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xbf50748788e42fb52467338302fc5ae6f014ce0901342538522b3bde3270b777
+OAPP: Magnify Cash
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x6f599fc21e57164366e4de0f7733488e21031a8e22a4501d0deaa936e0214bf5
+OAPP: Magnify Cash
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x0b5af725c7b0ae910426ce863498a62c984cafd6b5fbd7fffc5a32c593c96fea
+OAPP: UPLAND
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xcfc31c324a86311c9ef26c2258f2e6910a8de4ccdb12dab6e798d730eb3349b7
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x1f2f421cb7582366f129fb46efbe05c9dfaaa1cc4e32fb554a765ed830873d36
+OAPP: UPLAND
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x4f102c0f5d84c1e0265ae7fc827b97adf68d759cd825ac228881d7884519fb00
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x7608923bbb5b07b68eded2eebbe738e5e194fa75dc130aa006d0ae525f7bc750
+OAPP: UPLAND
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xda9d11d57ac9018dd3666100cca57f69e5a4f295f4e525816d98aa090cc8a919
+OAPP: Resolv USD
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x5c415735883c23cb27aafd07141ff69905c246cd85156fcdc74fb1edd8dec269
+OAPP: Unknown
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x09adc8b274d2b949c88126a21e6fc6eadda17d256742c7511f3ba41691df7c75
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x2e537eaf3b3988739de660562940fb89ee78ed36e990cc894a0c460f6a5aee94
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xbe0b38e23ed1257ee8f510da3c851b27119d87a06bb459e03ffd9fc8a78c9265
+OAPP: KOLZ
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xc395e80d59fc1a6fd9f807c5d88ca955a67df29d40ec77bceee95221380f035f
+OAPP: UPLAND
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x6723b647453e9ff2fb740d91b218521eaca974959042c57bcd89857fb183e9f2
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x11eef9c8e12897ffbab4691f5acd1aef00a575e0b50d95b8d5f0f3d7729eb230
+OAPP: UPLAND
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xb811e3d9ed69846cc60badc801d40755e9f35016b91272745dcfccfff51d8a98
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x12c139170a53ca91051422e30e0809c5c20831c8454bd6dd1181991ae08c688d
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x28a20237ee5b6f4a2d1bd53348bcd60e32e342e48530921efaea8a3ccf1c8549
+OAPP: Giza
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x3106506da5152b99c5e58e9b929ccc34059d3d2631f6448199d4d145026a5080
+OAPP: Syrup Token
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xf320bd9b5e8bafe39772afb05b40847a93b5190a2939ba32aad3c3fdccd372fc
+OAPP: UPLAND
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x6def3eaa190c4865a5a5e980c7f7eeeff8188bfc43a1e414648c70586772660e
+OAPP: Unknown
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x3f6409d844ee1c710cfd750cd085193b5d05589082711ea7c1af83296d6a4160
+OAPP: UPLAND
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xeabb12f25323f6b1e9e85f38a246e2e4f74f4c87898ab1e7de99e38d4cb710b4
+OAPP: Unknown
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xd1f2be87adf9a047487e7113f3c7774647feb6dae9ee79a144e7398a99497378
+OAPP: ISKRA TOKEN
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xd7d2bae5b1269c9cfe6c76f02a109527b03d455a58766cfc6b0bf200377f9e29
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x25c610a049be891319cc292c29c211ff1cd1fe83d778601085e79ef99d48a060
+OAPP: Primex Finance
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x0ad0fbdbb3b66a23539b548f29082f822bafb3486cebb55c06905ddd026ef8e5
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x6af65a6581eee157fb86f5c209e5c59430a26ba6682787d77746404c8d57ce31
+OAPP: UPLAND
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xe4bacdc28b45e0d4ec2aa1175f1a5832d0ab54a42c97bab77814ba2fa94891da
+OAPP: Unknown
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xa3d27f767d1d0817f5dda87bc3377ba52a23d2bb27b29c04146848d919944a8a
+OAPP: ISKRA TOKEN
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x07dea754fe17aaf316ec857bf509eddc48a0cac2ebe91c4a6062f1db756ad761
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xe0b9fb2d8375c81baae6f0bef7a3713db8e07571f8a0fdb096acdf4ed6f3cf7d
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x64e0a1beccd10c3979c2ceea300d6d359b30cc8824c908b20ddd6d30e543a5a2
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xdfe85b4a510324ce2ddfd4550a487c8fada3c04ad5c41bb5d5c574ee3943a0d6
+OAPP: King Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x4a1306846d9e673b376b380f54da35dc0d55d9b19c9f3781e4449ed6c2ed0bf4
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xb9926ae51077d36713ef2d63da83c10ed7e84b1a6647ece16b4d638b15dbe08c
+OAPP: Giza
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x31597cdf75eeaa4344b704b1eacde9988627beeb55123b105a6389a0f21f62b8
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x48909d09bdbcd6b13cc5d61d9cf4d1a57443bbb9aaad882a223d248e444611c8
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xc823f71209d3f8c4890a5c65fecbe027b37cb2be01f4ed7b07fad60d2b58bb24
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x86064025ae2da607e5961187b6671f8dbd4eb9a73d1492c8910b62fa37ee3c2b
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xe9a3d2812d2af212f9598b0da6527855fcf4a6f944ec7b1fb90c7c58bb51d375
+OAPP: Yala stablecoin
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xb1bf1587cf8c43666a8c9a21b4fdb60c61839ea4bfb0cbbed90c3f0ade070355
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xadf0e13eadf62bb43ebc58ce4229d34f56821ef9abcceb6da182171fdda3b324
+OAPP: ANyONe Protocol
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x472464b29ff3154996c6ac959cced820d01bf38375c8fb63e012edaf375c91b4
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x69f1988cf1b039b049839c9b77c40f69cffbdefe86f22fa3bae81d8dca5386d8
+OAPP: Wrapped BTC
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0xeaab7c7d9577922d07788b8bd648c1dd888fc9ba5ff002419b87c4e0af9d9cd4
+OAPP: Tokemak
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+TX Hash: 0x43d7518cf589b682dc613d2271272e7b3d1565110b383ff1432c6c185bcaf66c
+OAPP: UPLAND
+Flipside Status: sent
+LZScan Status: DELIVERED
+Corrected: ✅ Yes
+---
+
+================================================================================
+SAMPLE TRANSACTIONS FOR BRYAN (Bryan's examples):
+================================================================================
+
+1. 0x1f7f08c039df2879b11552b095338db97450b07caa7c151c0269b70f66d4dfbc
+2. 0x8c35323c10d774e1a179674a9d659d941bfce8358c34ec55661f5b00c2984678
+3. 0xc3d0506c17adfc685f9fa8f8be0aaddd8c99f992dd972f82b9a741b265b1c552
+
+All three confirmed as DELIVERED on LayerZeroScan.
+All three marked as "undelivered" in Flipside snapshot.
+Root cause: Snapshot timing - transactions still resolving when query executed.
+
+================================================================================
+NEXT STEPS
+================================================================================
+
+1. ✅ Data quality issue resolved in v1.1
+2. 🚀 Deploy corrected dataset to production
+3. 📊 DVN scores now reflect true delivery rates
+4. 🔄 v2: Implement real-time LayerZeroScan verification
+
+================================================================================

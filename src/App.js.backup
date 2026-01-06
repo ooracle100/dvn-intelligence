@@ -1,0 +1,962 @@
+import React, { useState, useEffect, useMemo } from 'react';
+import {
+  Search,
+  Shield,
+  CheckCircle,
+  Award,
+  Target,
+  AlertTriangle
+} from 'lucide-react';
+
+// Config
+const LAYERZERO_SCAN_BASE = process.env.REACT_APP_LAYERZERO_SCAN_BASE || 'https://layerzeroscan.com/tx/';
+
+// ----------------------------- App ------------------------------------------
+export default function App() {
+  const [data, setData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [viewMode, setViewMode] = useState('home');
+  const [viewData, setViewData] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // debug / scoring mode
+  const [scoringMode, setScoringMode] = useState('balanced'); // 'balanced' | 'volume_first' | 'simple'
+
+  useEffect(() => {
+    fetch('/dvn_data.json')
+      .then(r => r.json())
+      .then(j => {
+        setData(j);
+        setIsLoading(false);
+      })
+      .catch(err => {
+        console.error('Failed to load dvn_data.json', err);
+        setIsLoading(false);
+      });
+  }, []);
+
+  const handleHome = () => {
+    setViewMode('home');
+    setViewData(null);
+    window.scrollTo(0, 0);
+  };
+
+  const handleViewTransaction = (tx) => {
+    setViewMode('transaction');
+    setViewData({ transaction: tx });
+    window.scrollTo(0, 0);
+  };
+
+  // Helper exposed here so search can use it
+  const getDvnDisplayNameLocal = (address) => getDvnDisplayName(address, data);
+
+  const handleSearch = () => {
+    if (!data || !searchQuery.trim()) return handleHome();
+    const qRaw = searchQuery.trim();
+    const q = qRaw.toLowerCase();
+
+    // HEX inputs (addresses / tx hashes)
+    if (q.startsWith('0x')) {
+      // Transaction hash (66 chars)
+      if (q.length === 66) {
+        const tx = (data.transactions || []).find(t => t.source_tx_hash?.toLowerCase() === q || t.destination_tx_hash?.toLowerCase() === q);
+        setViewMode('transaction');
+        setViewData({ transaction: tx });
+        return;
+      }
+
+      // 42-char addresses: DVN-first search
+      if (q.length === 42) {
+        // 1) DVN address lookup (search required/optional lists first)
+        const dvnTxs = (data.transactions || []).filter(t =>
+          (t.required_dvn_addresses || []).map(a => (a || '').toLowerCase()).includes(q) ||
+          (t.optional_dvn_addresses || []).map(a => (a || '').toLowerCase()).includes(q)
+        );
+        if (dvnTxs.length) {
+          // prefer an explicit dvn_name if present anywhere, otherwise attempt global name lookup
+          const dvnName = getDvnDisplayName(q, data) || dvnTxs.find(t => t.dvn_name)?.dvn_name || null;
+          setViewMode('dvn');
+          setViewData({ address: q, name: dvnName, transactions: dvnTxs });
+          return;
+        }
+
+        // 2) OAPP exact address match
+        const byOapp = (data.transactions || []).filter(t => (t.oapp_address || '').toLowerCase() === q);
+        if (byOapp.length) {
+          setViewMode('oapp');
+          setViewData({ address: q, name: byOapp[0]?.oapp_name, transactions: byOapp });
+          return;
+        }
+
+        // 3) Wallet match (sender or recipient)
+        const byWallet = (data.transactions || []).filter(t => (t.sender_address || '').toLowerCase() === q || (t.recipient_address || '').toLowerCase() === q);
+        if (byWallet.length) {
+          setViewMode('wallet');
+          setViewData({ address: q, transactions: byWallet });
+          return;
+        }
+
+        // 4) Fallback: maybe it's a DVN address referenced elsewhere — try looser match
+        const looseDvn = (data.transactions || []).filter(t => (((t.required_dvn_addresses || [])).concat(t.optional_dvn_addresses || [])).map(a => (a || '').toLowerCase()).includes(q));
+        if (looseDvn.length) {
+          const explicit = looseDvn.find(t => t.dvn_name)?.dvn_name;
+          const dvnName = explicit || getDvnDisplayNameLocal(q) || null;
+          setViewMode('dvn');
+          setViewData({ address: q, name: dvnName, transactions: looseDvn });
+          return;
+        }
+      }
+    }
+
+    // Non-hex or not found above: try stack or oapp name exact matches first
+    const normalizedQueryStack = normalizeStackName(qRaw).toLowerCase();
+    const allStacks = summarizeStacks(data);
+    const matchedStack = allStacks.find(s => s.name.toLowerCase() === normalizedQueryStack);
+    if (matchedStack) {
+      const results = (data.transactions || []).filter(tx => normalizeStackName(tx.dvn_stack_names).toLowerCase() === normalizedQueryStack);
+      setViewMode('search');
+      setViewData({ query: qRaw, results });
+      return;
+    }
+
+    // Exact OAPP name match
+    const byOappName = (data.transactions || []).filter(t => (t.oapp_name || '').toLowerCase() === q);
+    if (byOappName.length) {
+      setViewMode('oapp');
+      setViewData({ address: byOappName[0]?.oapp_address, name: byOappName[0]?.oapp_name, transactions: byOappName });
+      return;
+    }
+
+    // Final: full-text partial search across fields
+    const results = (data.transactions || []).filter(tx => {
+      return (
+        (tx.oapp_name || '').toLowerCase().includes(q) ||
+        (tx.asset_type || '').toLowerCase().includes(q) ||
+        (tx.dvn_stack_names || '').toLowerCase().includes(q)
+      );
+    });
+
+    setViewMode('search');
+    setViewData({ query: searchQuery, results });
+  };
+
+
+  // expose scored DVNs for the debug panel
+  const dvnScores = useMemo(() => scoreDvns(data, scoringMode), [data, scoringMode]);
+
+  if (isLoading) return <LoadingScreen />;
+
+  return (
+    <div className="min-h-screen bg-black text-white">
+      <Header onHome={handleHome} onSearch={() => handleSearch()} searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+        {/* mobile-only warning — Tailwind handles responsiveness (recommended) */}
+<div className="md:hidden bg-yellow-900/30 border-b border-yellow-800 px-4 py-2 text-xs text-yellow-200">
+  ⚠️ Best viewed on desktop for full analytics experience
+</div>
+
+
+      <main className="max-w-7xl mx-auto px-6 py-8">
+        <div className="flex justify-between items-start gap-4">
+          <h1 className="sr-only">DVN Intelligence</h1>
+          <DebugPanel dvnScores={dvnScores} scoringMode={scoringMode} setScoringMode={setScoringMode} />
+        </div>
+
+        {viewMode === 'home' && <HomeView data={data} setViewMode={setViewMode} setViewData={setViewData} onViewTransaction={handleViewTransaction} />}
+        {viewMode === 'oapp' && <OappView viewData={viewData} setViewMode={setViewMode} onViewTransaction={handleViewTransaction} data={data} dvnScores={dvnScores} />}
+        {viewMode === 'dvn' && <DvnView viewData={viewData} data={data} setViewMode={setViewMode} onViewTransaction={handleViewTransaction} />}
+        {viewMode === 'wallet' && <WalletView viewData={viewData} onViewTransaction={handleViewTransaction} />}
+        {viewMode === 'transaction' && <TransactionView viewData={viewData} setViewMode={setViewMode} />}
+        {viewMode === 'search' && <SearchView viewData={viewData} setViewMode={setViewMode} onViewTransaction={handleViewTransaction} />}
+      </main>
+    </div>
+  );
+}
+
+// ------------------------------- Header ------------------------------------
+function Header({ onHome, onSearch, searchQuery, setSearchQuery }) {
+  return (
+    <div className="border-b border-gray-800 bg-black/95 sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <button onClick={onHome} className="flex items-center gap-2 text-sm font-semibold text-gray-200 hover:text-white">
+            <Shield className="text-emerald-500" size={20} />
+            <span>DVN Intelligence</span>
+          </button>
+          <nav className="hidden md:flex items-center gap-3 text-xs text-gray-400">
+            <button onClick={onHome} className="hover:text-white">Home</button>
+            <button className="hover:text-white">Builder</button>
+            <button className="hover:text-white">Institution</button>
+            <button className="hover:text-white">Trader</button>
+          </nav>
+        </div>
+
+        <div className="flex-1 max-w-xl">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={16} />
+            <input
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && onSearch()}
+              placeholder="Search OAPP, DVN, Wallet, or Tx Hash"
+              className="w-full pl-10 pr-28 py-2 bg-gray-900 border border-gray-800 rounded text-white placeholder-gray-600 text-sm"
+            />
+            <button onClick={onSearch} className="absolute right-2 top-1/2 -translate-y-1/2 px-4 py-1 bg-emerald-600 rounded text-sm">Search</button>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <div className="px-3 py-2 bg-emerald-950/30 border border-emerald-900/30 rounded flex items-center gap-2">
+            <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
+            <span className="text-xs text-emerald-300">LIVE</span>
+          </div>
+          <button className="text-sm text-gray-400 hover:text-white">Docs</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ------------------------------- Loading -----------------------------------
+function LoadingScreen() {
+  return (
+    <div className="min-h-screen bg-black text-white flex items-center justify-center">
+      <div className="text-center">
+        <div className="w-16 h-16 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+        <p className="text-gray-400 text-sm">LOADING DVN INTELLIGENCE</p>
+      </div>
+    </div>
+  );
+}
+
+// ------------------------------- Debug Panel --------------------------------
+function DebugPanel({ dvnScores, scoringMode, setScoringMode }) {
+  const top5 = (dvnScores || []).slice(0, 5);
+  return (
+    <div className="ml-auto p-3 border border-gray-800 rounded bg-gray-900 text-xs">
+      <div className="flex items-center gap-2 mb-2">
+        <strong>Score Mode:</strong>
+        <select value={scoringMode} onChange={e => setScoringMode(e.target.value)} className="bg-black text-white text-xs border border-gray-700 rounded px-2 py-0.5">
+          <option value="balanced">Balanced</option>
+          <option value="volume_first">Volume-first</option>
+          <option value="simple">Simple (success%)</option>
+        </select>
+      </div>
+      <div className="mb-1 text-gray-400">Top DVNs (debug)</div>
+      <div className="space-y-1">
+        {top5.map(d => (
+          <div key={d.name} className="flex items-center justify-between">
+            <div className="truncate pr-2">{d.displayName || d.name}</div>
+            <div className="font-mono">{Number(d.score).toFixed(1)}</div>
+          </div>
+        ))}
+        {top5.length === 0 && <div className="text-gray-500">no data</div>}
+      </div>
+    </div>
+  );
+}
+
+// ------------------------------- HomeView ---------------------------------
+function HomeView({ data, setViewMode, setViewData, onViewTransaction }) {
+  const stats = data?.metadata || {};
+  const stackSummary = useMemo(() => summarizeStacks(data), [data]);
+  const oapps = useMemo(() => summarizeOapps(data), [data]);
+  const dvnScores = useMemo(() => scoreDvns(data, 'balanced'), [data]);
+
+  // Top performers: delivered volume > 1k and successRate >= 90
+  const topPerformers = oapps.filter(o => (o.delivered_volume > 1000) && (o.successRate >= 90)).sort((a,b)=> b.delivered_volume - a.delivered_volume);
+  // High-volume failures: undelivered volume >= 50k or failed_count >= 10
+  const highVolumeFailures = oapps.filter(o => (o.undelivered_volume >= 50000) || (o.failed_count >= 10)).sort((a,b)=> b.undelivered_volume - a.undelivered_volume);
+
+  return (
+    <div className="space-y-8">
+      <div className="grid grid-cols-4 gap-4">
+        <MetricCard label="TOTAL VERIFICATIONS" value={(stats.total_transactions || 0).toLocaleString()} sublabel={`${stats.delivered_transactions || 0} delivered`} />
+        <MetricCard label="TOTAL VOLUME" value={`$${((stats.total_volume_usd || 0) / 1_000_000).toFixed(2)}M`} sublabel="Cross-chain secured" />
+        <MetricCard label="ACTIVE DVNs" value={stats.total_dvns || 0} sublabel="Network verifiers" />
+        <MetricCard label="SUCCESS RATE" value={`${((stats.delivered_transactions || 0) / Math.max(1, stats.total_transactions || 1) * 100).toFixed(1)}%`} sublabel="Network reliability" />
+      </div>
+
+      <div className="grid grid-cols-2 gap-6">
+        <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
+          <h3 className="font-bold mb-2 flex items-center gap-2 text-sm"><Target size={16} className="text-emerald-500" /> TOP STACKS</h3>
+          <p className="text-xs text-gray-500 mb-4">Top stacks by delivered volume, success rate and latency</p>
+          <div className="space-y-2">
+            {stackSummary.slice(0, 6).map((s) => (
+              <div key={s.name} className="p-3 bg-black border border-gray-800 rounded flex items-center justify-between">
+                <div>
+                  <div className="text-sm font-medium">{s.name}</div>
+                  <div className="text-xs text-gray-500">{s.count} tx • {formatUsd(s.delivered_volume)}</div>
+                </div>
+                <div className="text-right">
+                  <div className="text-sm font-semibold">{s.successRate}%</div>
+                  <div className="text-xs text-gray-400">{formatLatency(s.avgLatency)}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
+          <h3 className="font-bold mb-2 flex items-center gap-2 text-sm"><Award size={16} className="text-yellow-500" /> DVN RANKINGS</h3>
+          <p className="text-xs text-gray-500 mb-4">Reliability scores and performance leaders</p>
+          <div className="space-y-2">
+            {dvnScores.slice(0, 6).map((d) => (
+              <div key={d.name} className="p-3 bg-black border border-gray-800 rounded flex items-center justify-between">
+                <div>
+                  <div className="text-sm font-medium">{d.displayName || d.name}</div>
+                  <div className="text-xs text-gray-500">{d.count} tx • {formatUsd(d.total_volume || d.volume || 0)}</div>
+                </div>
+                <div className="text-right">
+                  <div className={`text-sm font-semibold ${d.score >= 85 ? 'text-emerald-300' : d.score >= 70 ? 'text-yellow-300' : 'text-red-300'}`}>{d.score.toFixed ? d.score.toFixed(1) : d.score}</div>
+                  <div className="text-xs text-gray-400">reliability</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-6">
+        <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="font-bold">Top Performers</h3>
+              <p className="text-xs text-gray-500">Delivered volume + high success rate</p>
+            </div>
+            <div className="text-xs text-gray-400">Filtered: delivered > $1k & success ≥ 90%</div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-3">
+            {topPerformers.length === 0 && <div className="text-xs text-gray-400">No top performers found with current thresholds.</div>}
+            {topPerformers.map(o => (
+              <div key={o.name} className="p-3 bg-black border border-gray-800 rounded cursor-pointer" onClick={() => { setViewMode('oapp'); setViewData(o); window.scrollTo(0,0); }}>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="font-bold">{o.name}</div>
+                    <div className="text-xs text-gray-500 font-mono">{(o.address || '').slice(0, 10)}...{(o.address || '').slice(-8)}</div>
+                    <div className="text-xs text-gray-400 mt-1">Route: {o.primaryRoute}</div>
+                    {o.topStacks && o.topStacks.length > 0 && <div className="text-xs text-gray-400 mt-1">Top Stacks: {o.topStacks.join(' • ')}</div>}
+                  </div>
+                  <div className="text-right">
+                    <div className="text-sm font-semibold text-emerald-300">{formatUsd(o.delivered_volume)}</div>
+                    <div className="text-xs text-gray-400">{o.successRate}% • {formatLatency(o.avgLatency)}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="font-bold">High-Volume Failures</h3>
+              <p className="text-xs text-gray-500">Undelivered or failed volumes to watch</p>
+            </div>
+            <div className="text-xs text-gray-400">Filtered: undelivered ≥ $50k or failures ≥ 10</div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-3">
+            {highVolumeFailures.length === 0 && <div className="text-xs text-gray-400">No high-volume failures found with current thresholds.</div>}
+            {highVolumeFailures.map(o => (
+              <div key={o.name} className="p-3 bg-black border border-gray-800 rounded cursor-pointer" onClick={() => { setViewMode('oapp'); setViewData(o); window.scrollTo(0,0); }}>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="font-bold">{o.name}</div>
+                    <div className="text-xs text-gray-500 font-mono">{(o.address || '').slice(0, 10)}...{(o.address || '').slice(-8)}</div>
+                    <div className="text-xs text-gray-400 mt-1">Route: {o.primaryRoute}</div>
+                    {o.topStacks && o.topStacks.length > 0 && <div className="text-xs text-gray-400 mt-1">Top Stacks: {o.topStacks.join(' • ')}</div>}
+                  </div>
+                  <div className="text-right">
+                    <div className="text-sm font-semibold text-red-300">Undelivered: {formatUsd(o.undelivered_volume)}</div>
+                    <div className="text-xs text-gray-400">Failed: {o.failed_count} • Success {o.successRate}%</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-gradient-to-r from-gray-900 to-gray-800 border border-gray-700 rounded-lg p-6">
+        <h4 className="font-bold">Institutional features - coming soon</h4>
+        <p className="text-xs text-gray-400">Economic guarantees, compliance exports and audit pipelines</p>
+      </div>
+    </div>
+  );
+}
+
+// -------------------------------- Oapp View --------------------------------
+function OappView({ viewData, setViewMode, onViewTransaction, data, dvnScores }) {
+  const txs = viewData?.transactions || [];
+  const stats = summarizeTransactions(txs);
+  const stackCompare = summarizeStacks({ transactions: txs });
+  const primaryRoute = viewData?.primaryRoute || viewData?.transactions?.[0]?.oapp_chain || viewData?.route || '';
+
+  // small comparison: build a normalized stack object for this OAPP and top stacks globally
+  const thisStacks = stackCompare.slice().map(s => ({ name: s.name, successRate: s.successRate, delivered_volume: s.delivered_volume }));
+  const topGlobalStacks = summarizeStacks(data).slice(0,3).map(s => ({ name: s.name, successRate: s.successRate, delivered_volume: s.delivered_volume }));
+
+  return (
+    <div className="space-y-6">
+      <div className="mb-2">
+        <button onClick={() => setViewMode('home')} className="text-xs text-gray-400 hover:text-white">← Back</button>
+        <h2 className="text-2xl font-bold mt-2">{viewData?.name || viewData?.address || 'OAPP'}</h2>
+        <p className="text-xs text-gray-500 font-mono">{viewData?.address} • Route: {primaryRoute}</p>
+        {viewData?.topStacks && viewData.topStacks.length > 0 && <p className="text-xs text-gray-400 mt-1">Top Stacks: {viewData.topStacks.join(' • ')}</p>}
+      </div>
+
+      <div className="grid grid-cols-5 gap-4">
+        <MetricCard label="TOTAL TXS" value={stats.total} />
+        <MetricCard label="DELIVERED VOLUME" value={formatUsd(viewData?.delivered_volume || stats.volume || 0)} />
+        <MetricCard label="SUCCESS RATE" value={`${stats.successRate}%`} />
+        <MetricCard label="AVG LATENCY" value={formatLatency(stats.avgLatency)} />
+        <MetricCard label="FAILURES" value={stats.failed} />
+      </div>
+
+      <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
+        <h3 className="font-bold mb-2">DVN Stack Recommender</h3>
+        <p className="text-xs text-gray-500 mb-4">Top stacks for this OAPP's asset mix (simple heuristic)</p>
+        <StackRecommender stacks={stackCompare} />
+      </div>
+
+      {/* Stack comparison block - small, non-intrusive */}
+      <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
+        <h3 className="font-bold mb-2">Stack Comparison</h3>
+        <p className="text-xs text-gray-500 mb-4">Compare this OAPP's stacks vs top-performing stacks globally</p>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <h4 className="font-semibold mb-2">This OAPP's Stacks</h4>
+            {thisStacks.map((s) => (
+              <div key={s.name} className="p-2 text-sm text-gray-300">• {s.name} — {s.successRate}% • {formatUsd(s.delivered_volume)}</div>
+            ))}
+            {thisStacks.length === 0 && <div className="text-xs text-gray-500">no stacks</div>}
+          </div>
+
+          <div>
+            <h4 className="font-semibold mb-2">Top Global Stacks</h4>
+            {topGlobalStacks.map((s) => (
+              <div key={s.name} className="p-2 text-sm text-gray-300">• {s.name} — {s.successRate}% • {formatUsd(s.delivered_volume)}</div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
+        <h3 className="font-bold mb-2">Recent Transactions (preview)</h3>
+        <TransactionTable transactions={txs.slice(0, 50)} onViewTransaction={onViewTransaction} />
+      </div>
+    </div>
+  );
+}
+
+// -------------------------------- Dvn View ---------------------------------
+function DvnView({ viewData, data, setViewMode, onViewTransaction }) {
+  const address = viewData?.address || '';
+  const explicitName = viewData?.name || null;
+  // resolve display name using helper if explicit not provided
+  const displayName = explicitName || (address ? getDvnDisplayName(address, data) : null) || null;
+  const txs = viewData?.transactions || [];
+  const stats = summarizeDvn(txs, address);
+  const participation = summarizeStacks({ transactions: txs });
+  const maxRate = Math.max(1, ...participation.map(p => p.successRate || 1));
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <button onClick={() => setViewMode('home')} className="text-xs text-gray-400 hover:text-white">← Back</button>
+        <h2 className="text-2xl font-bold mt-2">{displayName || address}</h2>
+        {displayName && <p className="text-xs text-gray-500 font-mono">{address}</p>}
+        {!displayName && <p className="text-xs text-gray-500 font-mono">{address}</p>}
+      </div>
+
+      <div className="grid grid-cols-4 gap-4">
+        <MetricCard label="VERIFICATIONS" value={stats.total} />
+        <MetricCard label="VOLUME SECURED" value={formatUsd(stats.volume_secured || 0)} />
+        <MetricCard label="SUCCESS RATE" value={`${stats.successRate}%`} />
+        <MetricCard label="AVG LATENCY" value={formatLatency(stats.avgLatency)} />
+      </div>
+
+      <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
+        <h3 className="font-bold mb-2">Stack Participation</h3>
+        <p className="text-xs text-gray-500 mb-4">Which stacks this DVN participates in (normalized names)</p>
+        <div className="space-y-2">
+          {participation.map((p) => (
+            <div key={p.name} className="p-3 bg-black border border-gray-800 rounded">
+              <div className="flex items-center justify-between mb-2">
+                <div>
+                  <div className="font-medium">{p.name}</div>
+                  <div className="text-xs text-gray-500">{p.count} tx • {formatUsd(p.delivered_volume)}</div>
+                </div>
+                <div className="text-right">
+                  <div className="font-semibold">{p.successRate}%</div>
+                  <div className="text-xs text-gray-400">{formatLatency(p.avgLatency)}</div>
+                </div>
+              </div>
+              <div className="w-full bg-gray-800 rounded h-2">
+                <div style={{ width: `${(p.successRate / maxRate) * 100}%` }} className="h-2 rounded bg-emerald-500" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
+        <h3 className="font-bold mb-2">Recent Transactions</h3>
+        <TransactionTable transactions={txs.slice(0, 200)} onViewTransaction={onViewTransaction} />
+      </div>
+    </div>
+  );
+}
+
+// ------------------------------- Wallet View --------------------------------
+function WalletView({ viewData, onViewTransaction }) {
+  const txs = viewData?.transactions || [];
+  const stats = summarizeTransactions(txs);
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <button onClick={() => window.location.reload()} className="text-xs text-gray-400 hover:text-white">← Back</button>
+        <h2 className="text-2xl font-bold">WALLET</h2>
+        <p className="text-xs text-gray-500 font-mono">{viewData?.address}</p>
+      </div>
+
+      <div className="grid grid-cols-4 gap-4">
+        <MetricCard label="TRANSACTIONS" value={stats.total} />
+        <MetricCard label="VOLUME" value={formatUsd(stats.volume)} />
+        <MetricCard label="SUCCESS RATE" value={`${stats.successRate}%`} />
+        <MetricCard label="AVG LATENCY" value={formatLatency(stats.avgLatency)} />
+      </div>
+
+      <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
+        <h3 className="font-bold">Recent Activity</h3>
+        <TransactionTable transactions={txs.slice(0, 100)} onViewTransaction={onViewTransaction} />
+      </div>
+    </div>
+  );
+}
+
+// ----------------------------- Transaction View -----------------------------
+function TransactionView({ viewData, setViewMode }) {
+  const tx = viewData?.transaction;
+  if (!tx) {
+    return (
+      <div className="bg-gray-900 border border-red-900 rounded-lg p-8 text-center">
+        <AlertTriangle className="mx-auto mb-4 text-red-500" size={48} />
+        <h3 className="text-xl font-bold mb-2">Transaction not found</h3>
+        <p className="text-gray-400">Check the database or try a different hash</p>
+      </div>
+    );
+  }
+
+  // explorer hash: prefer destination (delivered) but fall back to source
+  const explorerHash = tx.destination_tx_hash || tx.source_tx_hash || '';
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <button onClick={() => setViewMode('home')} className="text-xs text-gray-400 hover:text-white">← Back</button>
+        <h2 className="text-2xl font-bold">Transaction</h2>
+        <p className="text-xs text-gray-500 font-mono">{tx.source_tx_hash}</p>
+      </div>
+
+      <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
+        <div className="grid grid-cols-2 gap-4 text-sm">
+          <div>
+            <p className="text-gray-400">OAPP</p>
+            <p className="font-medium">{tx.oapp_name}</p>
+          </div>
+          <div>
+            <p className="text-gray-400">Amount</p>
+            <p className="font-medium text-emerald-400">{formatUsd(parseAmount(tx.amount_usd, tx.amount_tokens))}</p>
+          </div>
+          <div>
+            <p className="text-gray-400">Status</p>
+            <p className="font-medium">{tx.delivery_status}</p>
+          </div>
+          <div>
+            <p className="text-gray-400">Latency</p>
+            <p className="font-medium">{formatLatency(tx.latency_seconds)}</p>
+          </div>
+          <div className="col-span-2">
+            <p className="text-gray-400">DVN Stack</p>
+            <p className="font-medium">{tx.dvn_stack_names}</p>
+          </div>
+
+          <div className="col-span-2 mt-4 flex items-center gap-4">
+            <a href={`${LAYERZERO_SCAN_BASE}${explorerHash}`} target="_blank" rel="noreferrer" className="text-xs px-3 py-1 bg-gray-800 border border-gray-700 rounded">View on LayerZeroScan</a>
+            <button onClick={() => setViewMode('home')} className="text-xs px-3 py-1 bg-emerald-600 rounded">Back to Home</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ------------------------------- Search View --------------------------------
+function SearchView({ viewData, setViewMode, onViewTransaction }) {
+  const results = viewData?.results || [];
+  return (
+    <div className="space-y-6">
+      <div>
+        <button onClick={() => setViewMode('home')} className="text-xs text-gray-400 hover:text-white">← Back</button>
+        <h2 className="text-2xl font-bold">Search Results</h2>
+        <p className="text-xs text-gray-400">Found {results.length} results for “{viewData?.query}”</p>
+      </div>
+
+      <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
+        <TransactionTable transactions={results.slice(0, 200)} onViewTransaction={onViewTransaction} />
+      </div>
+    </div>
+  );
+}
+
+// ------------------------------- UI Pieces ---------------------------------
+function MetricCard({ label, value, sublabel }) {
+  return (
+    <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
+      <div className="flex items-center justify-between mb-2">
+        <p className="text-xs text-gray-500 tracking-wider">{label}</p>
+        <CheckCircle className="text-gray-600" size={16} />
+      </div>
+      <p className="text-2xl font-bold mb-1">{value}</p>
+      {sublabel && <p className="text-xs text-gray-600">{sublabel}</p>}
+    </div>
+  );
+}
+
+function TransactionTable({ transactions, onViewTransaction }) {
+  const handleView = (tx) => {
+    if (onViewTransaction) return onViewTransaction(tx);
+    window.location.hash = `#tx-${tx.source_tx_hash}`;
+  };
+
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full text-xs">
+        <thead>
+          <tr className="border-b border-gray-800">
+            <th className="text-left py-3 px-2 text-gray-500 font-medium">OAPP</th>
+            <th className="text-left py-3 px-2 text-gray-500 font-medium">ASSET</th>
+            <th className="text-right py-3 px-2 text-gray-500 font-medium">AMOUNT</th>
+            <th className="text-left py-3 px-2 text-gray-500 font-medium">DVN STACK</th>
+            <th className="text-left py-3 px-2 text-gray-500 font-medium">STATUS</th>
+            <th className="text-right py-3 px-2 text-gray-500 font-medium">LATENCY</th>
+            <th className="text-center py-3 px-2 text-gray-500 font-medium">ACTION</th>
+          </tr>
+        </thead>
+        <tbody>
+          {transactions.map((tx, idx) => (
+            <tr key={idx} className="border-b border-gray-800/50 hover:bg-gray-900/50">
+              <td className="py-3 px-2">{tx.oapp_name}</td>
+              <td className="py-3 px-2">{tx.asset_type}</td>
+              <td className="py-3 px-2 text-right font-mono">{formatUsd(parseAmount(tx.amount_usd, tx.amount_tokens))}</td>
+              <td className="py-3 px-2">{normalizeStackName(tx.dvn_stack_names)}</td>
+              <td className="py-3 px-2">{tx.delivery_status}</td>
+              <td className="py-3 px-2 text-right">{formatLatency(tx.latency_seconds)}</td>
+              <td className="py-3 px-2 text-center">
+                <button onClick={() => handleView(tx)} className="text-xs px-2 py-1 bg-emerald-600 rounded">View</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function StackRecommender({ stacks }) {
+  const top = (stacks || []).slice().sort((a, b) => b.successRate - a.successRate).slice(0, 3);
+  return (
+    <div className="grid grid-cols-3 gap-3">
+      {top.map(s => (
+        <div key={s.name} className="p-3 bg-black border border-gray-800 rounded">
+          <div className="font-semibold">{s.name}</div>
+          <div className="text-xs text-gray-500">{s.count} tx • {formatUsd(s.delivered_volume)}</div>
+          <div className="mt-2 text-sm font-bold text-emerald-300">{s.successRate}%</div>
+          <div className="text-xs text-gray-400">{formatLatency(s.avgLatency)}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ----------------------------- Helper Utilities -----------------------------
+function getDvnDisplayName(address, data) {
+  if (!address || !data) return null;
+  const a = String(address).toLowerCase().trim();
+
+  // 1) explicit metadata mapping (fast, reliable)
+  const labelsMeta = data?.metadata?.dvn_labels || {};
+  const labelsRoot = data?.dvn_labels || {};
+  const labels = { ...labelsMeta, ...labelsRoot };
+  if (labels[a]) return labels[a];
+
+  // 2) find first transaction where this address appears and has a dvn_name
+  for (const t of (data.transactions || [])) {
+    const addrs = ((t.required_dvn_addresses || []).concat(t.optional_dvn_addresses || [])).map(x => String(x||'').toLowerCase().trim());
+    if (addrs.includes(a) && t.dvn_name) return t.dvn_name;
+  }
+
+  // not found
+  return null;
+}
+
+function formatLatency(v) {
+  if (v === undefined || v === null || v === '' || Number.isNaN(Number(v))) return 'None';
+  return `${v}s`;
+}
+
+function parseAmount(v, fallbackTokens) {
+  if (v === undefined || v === null) v = '';
+  if (typeof v === 'number' && !Number.isNaN(v)) return v;
+  const s = String(v).trim();
+  const cleaned = s.replace(/[^0-9.\-]/g, '');
+  const n = Number(cleaned);
+  if (!Number.isNaN(n)) return n;
+  if (fallbackTokens) {
+    const t = String(fallbackTokens).replace(/[^0-9.\-]/g, '');
+    const tn = Number(t);
+    if (!Number.isNaN(tn)) return tn;
+  }
+  return 0;
+}
+
+function formatUsd(n) {
+  const v = Number(n || 0);
+  return `$${v.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}
+
+function normalizeStackName(raw) {
+  if (!raw) return 'unknown';
+  const parts = String(raw).split(/[,+]/).map(p => p.trim()).filter(Boolean);
+  const norm = parts.map(p => p.toLowerCase()).sort();
+  const unique = Array.from(new Set(norm));
+  const display = unique.map(tok => tok.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')).join(' + ');
+  return display || String(raw);
+}
+
+// ----------------------------- Analytics Utils -----------------------------
+function summarizeStacks(data) {
+  const map = {};
+  (data?.transactions || []).forEach(tx => {
+    const raw = tx?.dvn_stack_names || 'unknown';
+    const name = normalizeStackName(raw);
+    map[name] = map[name] || {
+      name,
+      count: 0,
+      total_volume: 0,
+      delivered_volume: 0,
+      failed: 0,
+      latencySumDelivered: 0,
+      deliveredCount: 0
+    };
+
+    const amt = parseAmount(tx.amount_usd, tx.amount_tokens);
+    map[name].count += 1;
+    map[name].total_volume += amt;
+
+    if ((tx.delivery_status || '').toLowerCase() === 'delivered') {
+      map[name].delivered_volume += amt;
+      map[name].latencySumDelivered += Number(tx.latency_seconds || 0);
+      map[name].deliveredCount += 1;
+    } else {
+      map[name].failed += 1;
+    }
+  });
+
+  return Object.values(map).map(m => ({
+    ...m,
+    avgLatency: m.deliveredCount > 0 ? Number((m.latencySumDelivered / m.deliveredCount).toFixed(1)) : null,
+    successRate: Math.round(((m.count - m.failed) / Math.max(1, m.count)) * 100),
+    // optional displayName from metadata
+    displayName: (data?.metadata?.dvn_labels || {})[String(m.name).toLowerCase()] || null
+  }))
+  // sort by delivered volume then success rate
+  .sort((a,b) => (b.delivered_volume || 0) - (a.delivered_volume || 0) || b.successRate - a.successRate);
+}
+
+function summarizeOapps(data) {
+  const map = {};
+  (data?.transactions || []).forEach(tx => {
+    const name = tx?.oapp_name || 'unknown';
+    map[name] = map[name] || { name, address: tx?.oapp_address || '', count: 0, volume: 0, transactions: [], routes: new Set(), delivered_volume: 0, undelivered_volume: 0, delivered_count: 0, failed_count: 0 };
+    map[name].count += 1;
+    map[name].volume += parseAmount(tx.amount_usd, tx.amount_tokens);
+    map[name].transactions.push(tx);
+    const route = tx?.oapp_chain || (tx?.source_chain && tx?.destination_chain ? `${tx.source_chain}-${tx.destination_chain}` : 'unknown');
+    map[name].routes.add(route);
+    if ((tx.delivery_status || '').toLowerCase() === 'delivered') {
+      map[name].delivered_volume += parseAmount(tx.amount_usd, tx.amount_tokens);
+      map[name].delivered_count += 1;
+    } else {
+      map[name].undelivered_volume += parseAmount(tx.amount_usd, tx.amount_tokens);
+      map[name].failed_count += 1;
+    }
+  });
+
+  // compute top stacks per OAPP
+  const results = Object.values(map).map(o => {
+    const deliveredTxs = o.transactions.filter(t => (t.delivery_status || '').toLowerCase() === 'delivered');
+    const avgLatency = deliveredTxs.length ? Number((deliveredTxs.reduce((s,t)=> s + Number(t.latency_seconds || 0), 0) / Math.max(1, deliveredTxs.length)).toFixed(1)) : null;
+    const successRate = Math.round(((o.delivered_count) / Math.max(1, o.count)) * 100);
+    const primaryRoute = Array.from(o.routes)[0] || 'unknown';
+
+    // stack teaser: compute delivered_volume per normalized stack for this OAPP
+    const stackMap = {};
+    o.transactions.forEach(t => {
+      const stack = normalizeStackName(t.dvn_stack_names || 'unknown');
+      stackMap[stack] = stackMap[stack] || { name: stack, delivered_volume: 0, count: 0 };
+      stackMap[stack].count += 1;
+      if ((t.delivery_status || '').toLowerCase() === 'delivered') {
+        stackMap[stack].delivered_volume += parseAmount(t.amount_usd, t.amount_tokens);
+      }
+    });
+    const topStacks = Object.values(stackMap).sort((a,b)=> (b.delivered_volume || 0) - (a.delivered_volume || 0)).slice(0,2).map(s=> s.name);
+
+    return { ...o, primaryRoute, avgLatency, successRate, topStacks };
+  });
+
+  return results.sort((a,b)=> b.delivered_volume - a.delivered_volume);
+}
+
+// ------------------------- New scoring function (replace entire old block) ----------------------------
+// Modes: 'balanced' (weighted: delivered volume + tx count, penalize undelivered & latency),
+// 'volume_first' (prioritize delivered volume), 'simple' (successRate only)
+function scoreDvns(data, mode = 'balanced') {
+  const map = {};
+  (data?.transactions || []).forEach(tx => {
+    const addrs = (tx.required_dvn_addresses || []).concat(tx.optional_dvn_addresses || []);
+    const amt = parseAmount(tx.amount_usd, tx.amount_tokens);
+    if (addrs.length === 0) {
+      const key = (tx?.dvn_name || normalizeStackName(tx?.dvn_stack_names) || 'unknown').toString();
+      map[key] = map[key] || {
+        name: key,
+        count: 0,
+        total_volume: 0,
+        delivered_volume: 0,
+        undelivered_volume: 0,
+        delivered_count: 0,
+        total_latency: 0,
+        failed: 0,
+        displayName: null
+      };
+      map[key].count += 1;
+      map[key].total_volume += amt;
+      if ((tx.delivery_status || '').toLowerCase() === 'delivered') {
+        map[key].delivered_volume += amt;
+        map[key].delivered_count += 1;
+        map[key].total_latency += Number(tx.latency_seconds || 0);
+      } else {
+        map[key].undelivered_volume += amt;
+        map[key].failed += 1;
+      }
+      if (!map[key].displayName && tx?.dvn_name) map[key].displayName = tx.dvn_name;
+    } else {
+      addrs.forEach(aRaw => {
+        const a = String(aRaw || 'unknown').toLowerCase();
+        map[a] = map[a] || {
+          name: a,
+          count: 0,
+          total_volume: 0,
+          delivered_volume: 0,
+          undelivered_volume: 0,
+          delivered_count: 0,
+          total_latency: 0,
+          failed: 0,
+          displayName: null
+        };
+        map[a].count += 1;
+        map[a].total_volume += amt;
+        if ((tx.delivery_status || '').toLowerCase() === 'delivered') {
+          map[a].delivered_volume += amt;
+          map[a].delivered_count += 1;
+          map[a].total_latency += Number(tx.latency_seconds || 0);
+        } else {
+          map[a].undelivered_volume += amt;
+          map[a].failed += 1;
+        }
+        if (!map[a].displayName && tx?.dvn_name) map[a].displayName = tx.dvn_name;
+      });
+    }
+  });
+
+  // convert to array and compute derived metrics
+  const arr = Object.values(map).map(m => {
+    const avgLatency = m.delivered_count ? (m.total_latency / m.delivered_count) : null;
+    const successRate = Math.round(((m.count - m.failed) / Math.max(1, m.count)) * 100);
+    return {
+      ...m,
+      avgLatency,
+      successRate,
+      // keep both names for UI compatibility
+      delivered_volume: m.delivered_volume || 0,
+      undelivered_volume: m.undelivered_volume || 0,
+      total_volume: m.total_volume || 0
+    };
+  });
+
+  // denominators for normalization (avoid divide-by-zero)
+  const maxDeliveredVolume = Math.max(1, ...arr.map(a => a.delivered_volume || 0));
+  const maxCount = Math.max(1, ...arr.map(a => a.count || 0));
+  const maxUndeliveredVolume = Math.max(1, ...arr.map(a => a.undelivered_volume || 0));
+  const maxLatency = Math.max(1, ...arr.map(a => a.avgLatency || 0));
+
+  // scoring formula (returns 0..100 scaled)
+  const scored = arr.map(a => {
+    const volScore = (a.delivered_volume || 0) / maxDeliveredVolume; // 0..1
+    const countScore = (a.count || 0) / maxCount; // 0..1
+    const undelPenalty = (a.undelivered_volume || 0) / maxUndeliveredVolume; // 0..1
+    const latencyPenalty = a.avgLatency ? (a.avgLatency / maxLatency) : 0; // 0..1
+    const successScore = (a.successRate || 0) / 100; // 0..1
+
+    let rawScore = 0;
+    if (mode === 'volume_first') {
+      rawScore = volScore * 0.6 + successScore * 0.2 + countScore * 0.1 - undelPenalty * 0.05 - latencyPenalty * 0.05;
+    } else if (mode === 'simple') {
+      rawScore = successScore;
+    } else { // balanced (default)
+      rawScore = volScore * 0.45 + countScore * 0.25 + successScore * 0.2 - undelPenalty * 0.06 - latencyPenalty * 0.04;
+    }
+
+    // scale to 0..100, floor at 20 to avoid tiny numbers in UI
+    const scaled = Math.max(20, Math.round(rawScore * 100));
+    return { ...a, score: scaled };
+  });
+
+  // attach labels from metadata/dvn_labels if available (case-insensitive)
+  const labelsMeta = (data?.metadata?.dvn_labels || {});
+  const labelsRoot = (data?.dvn_labels || {});
+  const labels = { ...labelsMeta, ...labelsRoot };
+
+  return scored
+    .map(s => ({
+      ...s,
+      displayName: labels[String(s.name).toLowerCase()] || s.displayName || null
+    }))
+    .sort((a, b) => b.score - a.score);
+}
+
+function summarizeDvn(txs, address) {
+  const total = txs.length;
+  const delivered_txs = txs.filter(t => (t.delivery_status || '').toLowerCase() === 'delivered');
+  const failed = total - delivered_txs.length;
+  const volume_secured = delivered_txs.reduce((s,t) => s + parseAmount(t.amount_usd, t.amount_tokens), 0);
+  const undelivered_volume = txs.reduce((s,t) => ((t.delivery_status || '').toLowerCase() === 'delivered' ? s : s + parseAmount(t.amount_usd, t.amount_tokens)), 0);
+  const successRate = Math.round(((delivered_txs.length) / Math.max(1, total)) * 100);
+  const avgLatency = delivered_txs.length ? Number((delivered_txs.reduce((s,t)=> s + Number(t.latency_seconds || 0), 0) / delivered_txs.length).toFixed(1)) : null;
+  return { address, total, volume_secured, undelivered_volume, failed, successRate, avgLatency };
+}
+
+function summarizeTransactions(txs) {
+  const total = txs.length;
+  const volume = txs.reduce((s,t)=> s + parseAmount(t.amount_usd, t.amount_tokens), 0);
+  const failed = txs.filter(t => (t.delivery_status || '').toLowerCase() !== 'delivered').length;
+  const successRate = Math.round(((total - failed) / Math.max(1, total)) * 100);
+  const delivered = txs.filter(t => (t.delivery_status || '').toLowerCase() === 'delivered');
+  const avgLatency = delivered.length ? Number((delivered.reduce((s,t)=> s + Number(t.latency_seconds || 0), 0) / Math.max(1, delivered.length)).toFixed(1)) : null;
+  return { total, volume, failed, successRate, avgLatency };
+}
+
+// ----------------------------- End of File ---------------------------------

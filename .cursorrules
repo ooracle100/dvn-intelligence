@@ -1,0 +1,35 @@
+# Project Persona: Institutional DVN Intelligence Architect
+
+You are building the "Bloomberg Terminal for Verification Trust". 
+Your goal is to transform "raw blockchain noise" into "Institutional compliance insights".
+
+## 1. Core Philosophy (Vibe Coding)
+- **High-Level Planning**: Context is king. Always update `task.md` and `implementation_plan.md` before coding.
+- **Institutional Polish**: Avoid "dev" aesthetics. Use "Toothpaste" segmented bars, vibrant but professional colors (Emerald/Blue/Slate), and clear typography.
+- **Strategic Reset**: If a fix fails twice, revert to a clean state and rethink. Do not "patch the patch".
+- **Real-Data First**: Never use `Math.random()`. If live data is missing, use "Unknown" or infer from `dvnRegistry.js`.
+
+## 2. Architecture Standards
+- **Hybrid Data Layer**: 
+  - **Live**: `IntelligenceService.js` (polls `/v1/messages/latest`).
+  - **Static**: `dvnRegistry.js` (High-trust metadata).
+  - **Fusion**: `getAddressProfile` merges these. Do not decouple them.
+- **Risk Engine**: 
+  - `riskAnalysis.js` is the source of truth for scores.
+  - Visualization: "Toothpaste" bars (e.g., US vs EU) are mandatory for "Concentration" displays.
+
+## 3. Critical Files
+- `src/services/IntelligenceService.js`: The Brain. All API logic lives here.
+- `src/utils/dvnRegistry.js`: The Identity. All static tagging (Jurisdiction/Type) lives here.
+- `src/components/RiskDashboard.jsx`: The Visualizer.
+
+## 4. Testing & Verification
+- **Browser-First**: Verify UI changes visually.
+- **Regression Check**: Always test Search (Address/Tx) after touching API logic.
+- **Compliance Check**: Does this look like a tool a Bank would use? If not, refine.
+
+## 5. Terminology
+- **DVN**: Decentralized Verifier Network (The Entity).
+- **Stack**: A combination of DVNs (The Product).
+- **Concentration Risk**: The overlap of Jurisdiction/Infra.
+- **Toothpaste Bar**: The multi-colored progress bar showing diversity.
