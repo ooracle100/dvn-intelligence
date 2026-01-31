@@ -1,70 +1,72 @@
-# Getting Started with Create React App
+# DVN Intelligence Platform
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+An institutional-grade analytics marketplace for LayerZero's Decentralized Verifier Networks (DVNs).
 
-## Available Scripts
+**Current Version:** MVP (85% Complete)  
+**Status:** Functional Core + Real-time Transaction Decoding
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## 🚀 The Mission
+Institutional builders (Ondo, PayPal, BitGo) need to select secure DVN stacks for billion-dollar assets. **DVN Intelligence** is the "CoinGecko for DVNs"—providing the first comparative marketplace and performance analytics stack for the LayerZero ecosystem.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+[Read the Product Manual](docs/MANUAL.md) | [See Architecture Decisions](docs/ARCHITECTURE.md)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `npm test`
+## ⚡ Key Features
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+*   **DVN Marketplace:** Compare 40+ DVNs by volume, latency, and jurisdiction (US/EU/APAC).
+*   **Transaction Intelligence:** Decode *any* LayerZero transaction hash to see the exact fees (DVN vs Executor) and amount transferred. 
+    *   *Powered by Alchemy + ethers.js*
+*   **OApp Dashboards:** Monitor performance for specific OApps (like FRNT or Merlin).
+*   **Institutional Metrics:** "Total Volume Secured" calculated via snapshot engine.
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 🛠️ Tech Stack
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+*   **Frontend:** React 18, Tailwind CSS
+*   **Data:** LayerZero Scan API + Alchemy (for decoding) + DeFiLlama (Prices)
+*   **Data Strategy:** Hybrid.
+    *   **Live:** Transaction details & OApp lookups.
+    *   **Snapshots:** Historical volume aggregation (generated weekly).
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+[View Data Pipeline Details](docs/DATA_PIPELINE.md)
 
-### `npm run eject`
+---
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## 🚦 Quick Start
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+1.  **Install Dependencies:**
+    ```bash
+    npm install
+    ```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+2.  **Environment Setup:**
+    Create `.env`:
+    ```bash
+    REACT_APP_ALCHEMY_KEY=your_alchemy_key_here
+    ```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+3.  **Run Development Server:**
+    ```bash
+    npm start
+    ```
+    Open [http://localhost:3000](http://localhost:3000)
 
-## Learn More
+4.  **Update Data Snapshots (Optional):**
+    ```bash
+    node scripts/generateDVNSnapshots.js
+    ```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+---
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## 📚 Documentation
 
-### Code Splitting
+*   **[Product Manual](docs/MANUAL.md):** Complete feature guide and project context.
+*   **[Architecture Check](docs/ARCHITECTURE.md):** Why we pivoted from "Real-time Volume" to "DVN Marketplace".
+*   **[DVN Selection Guide](docs/DVN_Selection_Guide.md):** User guide for institutional DVN selection.
+*   **[Data Pipeline](docs/DATA_PIPELINE.md):** How the snapshot generator works.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+*Looking for old docs? Check `docs/archive/`.*

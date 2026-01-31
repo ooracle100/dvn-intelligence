@@ -1,0 +1,485 @@
+{
+  "_metadata": {
+    "generatedAt": "2026-01-28T16:53:12.796Z",
+    "sampleSize": 5000,
+    "decodedTransactions": 2847,
+    "dvnsAnalyzed": 9,
+    "totalVolumeUsd": 9151597.19,
+    "supportedChains": [
+      "EID 30101",
+      "EID 30102",
+      "EID 30106",
+      "EID 30109",
+      "EID 30110",
+      "EID 30111",
+      "EID 30184"
+    ],
+    "dataSource": "LayerZero Scan API + Alchemy + DefiLlama",
+    "updateFrequency": "Weekly recommended"
+  },
+  "dvns": {
+    "google-cloud": {
+      "transactionCount": 308,
+      "successRate": 70.45,
+      "avgLatency": 40.3,
+      "totalVolume": 12168.86,
+      "avgTransactionSize": 83.35,
+      "decodedTransactions": 146,
+      "uniqueOApps": 5,
+      "topRoutes": [
+        {
+          "route": "30101-30184",
+          "count": 50
+        },
+        {
+          "route": "30184-30102",
+          "count": 50
+        },
+        {
+          "route": "30102-30101",
+          "count": 50
+        },
+        {
+          "route": "30110-30111",
+          "count": 50
+        },
+        {
+          "route": "30184-30110",
+          "count": 50
+        }
+      ],
+      "topStacks": [
+        {
+          "stack": "Google + LayerZero Labs",
+          "count": 308,
+          "successRate": 70.5,
+          "avgLatency": 40.3,
+          "totalVolumeUsd": "12168.86"
+        }
+      ],
+      "delivered": 217,
+      "failed": 0,
+      "inflight": 91,
+      "lastUpdated": "2026-01-28T16:53:12.712Z"
+    },
+    "eigenzero": {
+      "transactionCount": 42,
+      "successRate": 21.43,
+      "avgLatency": 43,
+      "totalVolume": 8.4,
+      "avgTransactionSize": 0.21,
+      "decodedTransactions": 40,
+      "uniqueOApps": 1,
+      "topRoutes": [
+        {
+          "route": "30102-30106",
+          "count": 42
+        }
+      ],
+      "topStacks": [
+        {
+          "stack": "EigenZero + Nethermind",
+          "count": 42,
+          "successRate": 21.4,
+          "avgLatency": 43,
+          "totalVolumeUsd": "8.40"
+        }
+      ],
+      "delivered": 9,
+      "failed": 0,
+      "inflight": 33,
+      "lastUpdated": "2026-01-28T16:53:12.743Z"
+    },
+    "deutsche-telekom": {
+      "transactionCount": 130,
+      "successRate": 38.46,
+      "avgLatency": 36,
+      "totalVolume": 2.42,
+      "avgTransactionSize": 0.11,
+      "decodedTransactions": 22,
+      "uniqueOApps": 2,
+      "topRoutes": [
+        {
+          "route": "30150-30168",
+          "count": 108
+        },
+        {
+          "route": "30101-30375",
+          "count": 22
+        }
+      ],
+      "topStacks": [
+        {
+          "stack": "Canary + Deutsche Telekom + P2P",
+          "count": 108,
+          "successRate": 46.3,
+          "avgLatency": 36,
+          "totalVolumeUsd": "0.00"
+        },
+        {
+          "stack": "Canary + Deutsche Telekom + LayerZero Labs",
+          "count": 22,
+          "successRate": 0,
+          "avgLatency": null,
+          "totalVolumeUsd": "2.42"
+        }
+      ],
+      "delivered": 50,
+      "failed": 0,
+      "inflight": 80,
+      "lastUpdated": "2026-01-28T16:53:12.748Z"
+    },
+    "nethermind": {
+      "transactionCount": 1919,
+      "successRate": 81.87,
+      "avgLatency": 45.6,
+      "totalVolume": 3584744.32,
+      "avgTransactionSize": 2271.7,
+      "decodedTransactions": 1578,
+      "uniqueOApps": 16,
+      "topRoutes": [
+        {
+          "route": "30184-30102",
+          "count": 463
+        },
+        {
+          "route": "30101-30391",
+          "count": 140
+        },
+        {
+          "route": "30102-30110",
+          "count": 134
+        },
+        {
+          "route": "30102-30101",
+          "count": 106
+        },
+        {
+          "route": "30110-30391",
+          "count": 100
+        }
+      ],
+      "topStacks": [
+        {
+          "stack": "LayerZero Labs + Nethermind",
+          "count": 1268,
+          "successRate": 83.7,
+          "avgLatency": 50.5,
+          "totalVolumeUsd": "1003886.02"
+        },
+        {
+          "stack": "Canary + Horizen + Nansen",
+          "count": 463,
+          "successRate": 90.5,
+          "avgLatency": 26.9,
+          "totalVolumeUsd": "216201.36"
+        },
+        {
+          "stack": "Horizen + LayerZero Labs",
+          "count": 88,
+          "successRate": 93.2,
+          "avgLatency": 78.9,
+          "totalVolumeUsd": "448.90"
+        },
+        {
+          "stack": "BitGo",
+          "count": 44,
+          "successRate": 0,
+          "avgLatency": null,
+          "totalVolumeUsd": "2364199.64"
+        },
+        {
+          "stack": "EigenZero + Nethermind",
+          "count": 42,
+          "successRate": 21.4,
+          "avgLatency": 43,
+          "totalVolumeUsd": "8.40"
+        }
+      ],
+      "delivered": 1571,
+      "failed": 0,
+      "inflight": 348,
+      "lastUpdated": "2026-01-28T16:53:12.759Z"
+    },
+    "layerzero-labs": {
+      "transactionCount": 1870,
+      "successRate": 76.84,
+      "avgLatency": 40,
+      "totalVolume": 635096.71,
+      "avgTransactionSize": 616.6,
+      "decodedTransactions": 1030,
+      "uniqueOApps": 27,
+      "topRoutes": [
+        {
+          "route": "30102-30101",
+          "count": 204
+        },
+        {
+          "route": "30102-30110",
+          "count": 134
+        },
+        {
+          "route": "30184-30101",
+          "count": 116
+        },
+        {
+          "route": "30106-30324",
+          "count": 100
+        },
+        {
+          "route": "30184-30110",
+          "count": 100
+        }
+      ],
+      "topStacks": [
+        {
+          "stack": "LayerZero Labs + Nethermind",
+          "count": 975,
+          "successRate": 85.4,
+          "avgLatency": 37.7,
+          "totalVolumeUsd": "266945.77"
+        },
+        {
+          "stack": "LayerZero Labs",
+          "count": 307,
+          "successRate": 69.4,
+          "avgLatency": 35,
+          "totalVolumeUsd": "24723.48"
+        },
+        {
+          "stack": "Google + LayerZero Labs",
+          "count": 168,
+          "successRate": 94.6,
+          "avgLatency": 38.8,
+          "totalVolumeUsd": "12168.86"
+        },
+        {
+          "stack": "LayerZero Labs + USDT0",
+          "count": 100,
+          "successRate": 0,
+          "avgLatency": null,
+          "totalVolumeUsd": "0.00"
+        },
+        {
+          "stack": "Canary + Horizen + LayerZero Labs",
+          "count": 100,
+          "successRate": 100,
+          "avgLatency": 19.5,
+          "totalVolumeUsd": "286005.00"
+        }
+      ],
+      "delivered": 1437,
+      "failed": 0,
+      "inflight": 433,
+      "lastUpdated": "2026-01-28T16:53:12.771Z"
+    },
+    "horizen-labs": {
+      "transactionCount": 1641,
+      "successRate": 84.28,
+      "avgLatency": 38.3,
+      "totalVolume": 2007883.72,
+      "avgTransactionSize": 1372.44,
+      "decodedTransactions": 1463,
+      "uniqueOApps": 13,
+      "topRoutes": [
+        {
+          "route": "30184-30102",
+          "count": 463
+        },
+        {
+          "route": "30102-30101",
+          "count": 154
+        },
+        {
+          "route": "30102-30110",
+          "count": 134
+        },
+        {
+          "route": "30110-30391",
+          "count": 100
+        },
+        {
+          "route": "30110-30184",
+          "count": 99
+        }
+      ],
+      "topStacks": [
+        {
+          "stack": "LayerZero Labs + Nethermind",
+          "count": 872,
+          "successRate": 91.2,
+          "avgLatency": 35.5,
+          "totalVolumeUsd": "788225.22"
+        },
+        {
+          "stack": "Canary + Horizen + Nansen",
+          "count": 491,
+          "successRate": 91,
+          "avgLatency": 37.5,
+          "totalVolumeUsd": "216681.00"
+        },
+        {
+          "stack": "Horizen + LayerZero Labs",
+          "count": 138,
+          "successRate": 59.4,
+          "avgLatency": 78.9,
+          "totalVolumeUsd": "672159.40"
+        },
+        {
+          "stack": "Canary + Horizen + LayerZero Labs",
+          "count": 50,
+          "successRate": 100,
+          "avgLatency": 24,
+          "totalVolumeUsd": "286005.00"
+        },
+        {
+          "stack": "Canary + LayerZero Labs + Ondo",
+          "count": 48,
+          "successRate": 0,
+          "avgLatency": null,
+          "totalVolumeUsd": "44804.70"
+        }
+      ],
+      "delivered": 1383,
+      "failed": 0,
+      "inflight": 258,
+      "lastUpdated": "2026-01-28T16:53:12.777Z"
+    },
+    "bitgo": {
+      "transactionCount": 44,
+      "successRate": 0,
+      "avgLatency": null,
+      "totalVolume": 2364199.64,
+      "avgTransactionSize": 53731.81,
+      "decodedTransactions": 44,
+      "uniqueOApps": 1,
+      "topRoutes": [
+        {
+          "route": "30101-30390",
+          "count": 44
+        }
+      ],
+      "topStacks": [
+        {
+          "stack": "BitGo",
+          "count": 44,
+          "successRate": 0,
+          "avgLatency": null,
+          "totalVolumeUsd": "2364199.64"
+        }
+      ],
+      "delivered": 0,
+      "failed": 0,
+      "inflight": 44,
+      "lastUpdated": "2026-01-28T16:53:12.779Z"
+    },
+    "stargate": {
+      "transactionCount": 95,
+      "successRate": 52.63,
+      "avgLatency": 31,
+      "totalVolume": 0,
+      "avgTransactionSize": 0,
+      "decodedTransactions": 0,
+      "uniqueOApps": 3,
+      "topRoutes": [
+        {
+          "route": "30183-30110",
+          "count": 50
+        },
+        {
+          "route": "30362-30101",
+          "count": 42
+        },
+        {
+          "route": "30335-30110",
+          "count": 3
+        }
+      ],
+      "topStacks": [
+        {
+          "stack": "LayerZero Labs + Nethermind",
+          "count": 95,
+          "successRate": 52.6,
+          "avgLatency": 31,
+          "totalVolumeUsd": "0.00"
+        }
+      ],
+      "delivered": 50,
+      "failed": 0,
+      "inflight": 45,
+      "lastUpdated": "2026-01-28T16:53:12.782Z"
+    },
+    "canary": {
+      "transactionCount": 837,
+      "successRate": 65.35,
+      "avgLatency": 36.1,
+      "totalVolume": 547493.12,
+      "avgTransactionSize": 906.45,
+      "decodedTransactions": 604,
+      "uniqueOApps": 8,
+      "topRoutes": [
+        {
+          "route": "30184-30102",
+          "count": 463
+        },
+        {
+          "route": "30150-30168",
+          "count": 108
+        },
+        {
+          "route": "30339-30110",
+          "count": 104
+        },
+        {
+          "route": "30102-30396",
+          "count": 50
+        },
+        {
+          "route": "30102-30101",
+          "count": 48
+        }
+      ],
+      "topStacks": [
+        {
+          "stack": "Canary + Horizen + Nansen",
+          "count": 491,
+          "successRate": 91,
+          "avgLatency": 37.5,
+          "totalVolumeUsd": "216681.00"
+        },
+        {
+          "stack": "Canary + Deutsche Telekom + P2P",
+          "count": 108,
+          "successRate": 46.3,
+          "avgLatency": 36,
+          "totalVolumeUsd": "0.00"
+        },
+        {
+          "stack": "LayerZero Labs + USDT0",
+          "count": 104,
+          "successRate": 0,
+          "avgLatency": null,
+          "totalVolumeUsd": "0.00"
+        },
+        {
+          "stack": "Canary + Horizen + LayerZero Labs",
+          "count": 50,
+          "successRate": 100,
+          "avgLatency": 24,
+          "totalVolumeUsd": "286005.00"
+        },
+        {
+          "stack": "Canary + LayerZero Labs + Ondo",
+          "count": 48,
+          "successRate": 0,
+          "avgLatency": null,
+          "totalVolumeUsd": "44804.70"
+        }
+      ],
+      "delivered": 547,
+      "failed": 0,
+      "inflight": 290,
+      "lastUpdated": "2026-01-28T16:53:12.789Z"
+    }
+  }
+}

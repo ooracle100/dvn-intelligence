@@ -1,248 +1,702 @@
 /* global BigInt */
 // src/services/IntelligenceService.js
-// THE GRAND FIX: Robust, Class-Based Data Service for DVN Intelligence
+// FIX 2: ethers.js + ABI decoding for amounts and fees
 
-import { CHAIN_INFO, getDVNAddresses } from '../utils/dvnRegistry';
-import { getAssetDisplayName } from '../utils/assetRegistry';
+import { ethers } from 'ethers';
+import { CHAIN_INFO, getDVNAddresses, DVN_REGISTRY } from '../utils/dvnRegistry';
+import { getAssetDisplayName, getAssetByAddress, INSTITUTIONAL_ASSETS } from '../utils/assetRegistry';
+import { OFT_ABI, LAYERZERO_FEE_ABI } from '../utils/oftABI';
 
 const LZSCAN_API = "https://scan.layerzero-api.com/v1";
-const ETHERSCAN_V2_API = "https://api.etherscan.io/v2/api";
-const ETHERSCAN_KEY = process.env.REACT_APP_ETHERSCAN_KEY || "VTDG6VHKP4CJHK4G5CDDQYWF5CWUHVKGM4";
+const ALCHEMY_KEY = process.env.REACT_APP_ALCHEMY_KEY || "demo";
 const COINGECKO_API = "https://api.coingecko.com/api/v3/simple/price";
 
-// Event signatures (keccak256 hashes)
-const EVENT_SIGNATURES = {
-    DVNFeePaid: '0x2f32cdb66b67e12c3e2b4784aa1d3aca8b1e898e5dfbe69e1f95e8e0bdb74a66',
-    ExecutorFeePaid: '0x67438c464be5cea5c673c9902f1d2f6c56ad0a8f6a1933a367b92f4568772b8c'
+const ALCHEMY_ENDPOINTS = {
+    1: `https://eth-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+    56: `https://bnb-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+    137: `https://polygon-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+    42161: `https://arb-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+    10: `https://opt-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+    8453: `https://base-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+    43114: `https://avax-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`
 };
 
-// Cache Constants
-const CACHE_TTL = 1000 * 60 * 5; // 5 mins standard
-const LIVE_TTL = 1000 * 30;      // 30s for live feeds
+const CACHE_TTL = 1000 * 60 * 5;
+const LIVE_TTL = 1000 * 30;
+const FETCH_TIMEOUT = 10000;
 
 class LayerZeroIntelligenceService {
     constructor() {
         this.cache = new Map();
+        this.nativePrices = {};
+        this.tokenPriceCache = new Map();
+        this.oftInterface = new ethers.Interface(OFT_ABI);
+        this.feeInterface = new ethers.Interface(LAYERZERO_FEE_ABI);
+        this._initPrices();
     }
 
-    /* -------------------------------------------------------------------------- */
-    /*                            CORE SEARCH API                                 */
-    /* -------------------------------------------------------------------------- */
+    async _initPrices() {
+        try {
+            const ids = 'ethereum,binancecoin,matic-network,avalanche-2,fantom';
+            const res = await fetch(`${COINGECKO_API}?ids=${ids}&vs_currencies=usd`);
+            const data = await res.json();
+
+            this.nativePrices = {
+                1: data.ethereum?.usd || 2000,
+                56: data.binancecoin?.usd || 300,
+                137: data['matic-network']?.usd || 0.5,
+                43114: data['avalanche-2']?.usd || 20,
+                250: data.fantom?.usd || 0.3,
+                42161: data.ethereum?.usd || 2000,
+                10: data.ethereum?.usd || 2000,
+                8453: data.ethereum?.usd || 2000
+            };
+        } catch (e) {
+            this.nativePrices = { 1: 2000, 56: 300, 137: 0.5, 42161: 2000, 10: 2000, 8453: 2000 };
+        }
+    }
+
+    _getNativePriceForChain(chainId) {
+        return this.nativePrices[chainId] || 0;
+    }
 
     async search(query) {
         const q = query.trim().toLowerCase();
 
-        // 1. DVN Name Lookup
         const dvnInfo = getDVNAddresses(query) || getDVNAddresses(q);
         if (dvnInfo) {
             return {
                 type: "dvn_name",
                 name: dvnInfo.name,
                 addresses: dvnInfo.addresses,
-                message: `Found ${dvnInfo.name}. Select an address to view.`
+                dvnId: this._getDVNIdFromName(dvnInfo.name),
+                message: `Found ${dvnInfo.name}`
             };
         }
 
-        // 2. Transaction Hash
         if (q.startsWith('0x') && q.length === 66) {
-            return await this.getTransaction(q);
+            const txResult = await this.getTransaction(q);
+            if (!txResult.error) {
+                return txResult;
+            }
         }
 
-        // 3. Address (Wallet or DVN or OApp)
         if (q.startsWith('0x') && q.length === 42) {
             return await this.getAddressProfile(q);
         }
 
-        return { error: "Invalid format. Try a Tx Hash, Address (0x...), or DVN Name." };
+        return { error: "Invalid format" };
     }
 
-    /* -------------------------------------------------------------------------- */
-    /*                            TRANSACTION DATALAYER                           */
-    /* -------------------------------------------------------------------------- */
+    _getDVNIdFromName(name) {
+        const normalized = name.toLowerCase();
+        const { DVN_REGISTRY } = require('../utils/dvnRegistry');
+
+        for (const [id, dvn] of Object.entries(DVN_REGISTRY)) {
+            if (dvn.name.toLowerCase() === normalized) {
+                return id;
+            }
+        }
+        return null;
+    }
 
     async getTransaction(txHash) {
         const cacheKey = `tx:${txHash}`;
         if (this._getFromCache(cacheKey)) return this._getFromCache(cacheKey);
 
         try {
-            // 1. Fetch RAW Data (Critical Path)
-            let rawMsg = await this._fetchRawMessage(txHash);
-            if (!rawMsg) return { error: "Transaction not found on LayerZero." };
+            const res = await this._fetchWithTimeout(
+                `${LZSCAN_API}/messages/tx/${txHash}`,
+                FETCH_TIMEOUT
+            );
 
-            // 2. Parse into Standard Model (Safe)
+            if (!res.ok) {
+                return { error: `Transaction not found (${res.status})` };
+            }
+
+            const json = await res.json();
+            const rawMsg = json.data?.[0];
+
+            if (!rawMsg) {
+                return { error: "Transaction not found" };
+            }
+
             let transaction = this._normalizeTransaction(rawMsg);
 
-            // 3. Enrich (Non-Critical Path)
-            try {
-                const enriched = await this._enrichTransaction(transaction);
-                transaction = { ...transaction, ...enriched };
-            } catch (e) {
-                console.warn('Enrichment partially failed:', e);
+            // Decode with Alchemy + ethers.js
+            if (transaction.source_tx_hash && transaction.source_chain_eid) {
+                const chainId = CHAIN_INFO[transaction.source_chain_eid]?.chainId;
+
+                if (chainId && ALCHEMY_ENDPOINTS[chainId]) {
+                    const decoded = await this._decodeTransactionWithEthers(
+                        transaction.source_tx_hash,
+                        chainId,
+                        transaction.source_chain_eid
+                    );
+
+                    transaction = { ...transaction, ...decoded };
+                }
             }
 
             this._setCache(cacheKey, transaction);
             return transaction;
 
         } catch (e) {
-            console.error('Service Error (getTx):', e);
-            return { error: "Failed to load transaction data." };
+            console.error('❌ Transaction error:', e);
+            return { error: "Failed to load transaction" };
         }
     }
 
-    /* -------------------------------------------------------------------------- */
-    /*                            ADDRESS / TRADER DATALAYER                      */
-    /* -------------------------------------------------------------------------- */
+    async _decodeTransactionWithEthers(txHash, chainId, eid) {
+        const result = {
+            amount_tokens: null,
+            amount_usd: null,
+            asset_symbol: null,
+            asset_address: null,
+            dvn_fee_usd: null,
+            executor_fee_usd: null,
+            chain_fee_usd: null,
+            total_fee_usd: null
+        };
+
+        try {
+            const endpoint = ALCHEMY_ENDPOINTS[chainId];
+            if (!endpoint) return result;
+
+            const receiptRes = await this._fetchWithTimeout(endpoint, FETCH_TIMEOUT, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    jsonrpc: '2.0',
+                    id: 1,
+                    method: 'eth_getTransactionReceipt',
+                    params: [txHash]
+                })
+            });
+
+            const receiptData = await receiptRes.json();
+            const receipt = receiptData.result;
+
+            if (!receipt) return result;
+
+            const logs = receipt.logs || [];
+            const nativePrice = this._getNativePriceForChain(chainId);
+
+            console.log(`[Decoder] Chain ${chainId}, ${logs.length} logs found, native price: $${nativePrice}`);
+
+            // Decode OFTSent with ethers.js
+            for (const log of logs) {
+                try {
+                    const parsed = this.oftInterface.parseLog({ topics: log.topics, data: log.data });
+                    console.log(`[Decoder] Parsed event: ${parsed?.name}`, parsed?.args);
+                    if (parsed && parsed.name === 'OFTSent') {
+                        // ethers v6: args[3] = amountSentLD (index-based access)
+                        const amountSentLD = parsed.args[3];
+                        const tokenAddress = log.address;
+                        console.log(`[Decoder] OFTSent amount: ${amountSentLD}, token: ${tokenAddress}`);
+
+                        result.asset_address = tokenAddress;
+
+                        const tokenInfo = await this._getTokenInfo(tokenAddress, chainId);
+                        console.log(`[Decoder] TokenInfo:`, tokenInfo);
+                        result.asset_symbol = tokenInfo.symbol;
+
+                        const decimals = tokenInfo.decimals || 18;
+                        const amountTokens = Number(amountSentLD) / Math.pow(10, decimals);
+                        console.log(`[Decoder] Decimals: ${decimals}, amountTokens: ${amountTokens}`);
+
+                        if (amountTokens > 0 && amountTokens < 1e15) {
+                            result.amount_tokens = amountTokens.toFixed(6);
+
+                            if (tokenInfo.price > 0) {
+                                result.amount_usd = (amountTokens * tokenInfo.price).toFixed(2);
+                            }
+                            console.log(`[Decoder] FINAL RESULT:`, result);
+                        }
+                        break;
+                    }
+                } catch (e) {
+                    // Not OFTSent event, continue
+                }
+            }
+
+            // If no OFTSent, try Transfer event
+            if (!result.amount_tokens) {
+                console.log('[Decoder] No OFTSent found, trying Transfer events...');
+                for (const log of logs) {
+                    try {
+                        const parsed = this.oftInterface.parseLog({ topics: log.topics, data: log.data });
+                        if (parsed && parsed.name === 'Transfer') {
+                            // ethers v6: args[2] = value (index-based access)
+                            const value = parsed.args[2];
+                            const tokenAddress = log.address;
+                            console.log(`[Decoder] Transfer amount: ${value}, token: ${tokenAddress}`);
+
+                            result.asset_address = tokenAddress;
+
+                            const tokenInfo = await this._getTokenInfo(tokenAddress, chainId);
+                            result.asset_symbol = tokenInfo.symbol;
+
+                            const decimals = tokenInfo.decimals || 18;
+                            const amountTokens = Number(value) / Math.pow(10, decimals);
+
+                            if (amountTokens > 0 && amountTokens < 1e15) {
+                                result.amount_tokens = amountTokens.toFixed(6);
+
+                                if (tokenInfo.price > 0) {
+                                    result.amount_usd = (amountTokens * tokenInfo.price).toFixed(2);
+                                }
+                            }
+                            break;
+                        }
+                    } catch (e) {
+                        // Continue
+                    }
+                }
+            }
+
+            // Gas fee
+            const gasUsed = BigInt(receipt.gasUsed);
+            const gasPrice = BigInt(receipt.effectiveGasPrice || '0');
+            const gasCostWei = gasUsed * gasPrice;
+            const gasCostNative = Number(gasCostWei) / 1e18;
+            result.chain_fee_usd = (gasCostNative * nativePrice).toFixed(2);
+
+            // DVN fees (array decoding)
+            for (const log of logs) {
+                try {
+                    const parsed = this.feeInterface.parseLog(log);
+                    if (parsed && parsed.name === 'DVNFeePaid') {
+                        const fees = parsed.args.fees;
+                        let totalDVNFee = 0n;
+
+                        for (const fee of fees) {
+                            totalDVNFee += BigInt(fee.toString());
+                        }
+
+                        const dvnFeeNative = Number(totalDVNFee) / 1e18;
+                        result.dvn_fee_usd = (dvnFeeNative * nativePrice).toFixed(4);
+                        break;
+                    }
+                } catch (e) {
+                    // Continue
+                }
+            }
+
+            // Executor fee
+            for (const log of logs) {
+                try {
+                    const parsed = this.feeInterface.parseLog(log);
+                    if (parsed && parsed.name === 'ExecutorFeePaid') {
+                        const fee = parsed.args.fee;
+                        const execFeeNative = Number(fee) / 1e18;
+                        result.executor_fee_usd = (execFeeNative * nativePrice).toFixed(2);
+                        break;
+                    }
+                } catch (e) {
+                    // Continue
+                }
+            }
+
+            const totalFee = parseFloat(result.chain_fee_usd || 0) +
+                parseFloat(result.dvn_fee_usd || 0) +
+                parseFloat(result.executor_fee_usd || 0);
+            result.total_fee_usd = totalFee.toFixed(2);
+
+        } catch (e) {
+            console.error('❌ Decode error:', e);
+        }
+
+        return result;
+    }
+
+    async _batchDecodeTransactions(transactions) {
+        console.log(`[BatchDecoder] Starting decoding for ${transactions.length} transactions...`);
+        const decodedTxs = [...transactions];
+
+        // Process in chunks to avoid rate limits
+        const CHUNK_SIZE = 5;
+        const DELAY_MS = 100;
+
+        for (let i = 0; i < decodedTxs.length; i += CHUNK_SIZE) {
+            const chunk = decodedTxs.slice(i, i + CHUNK_SIZE);
+            console.log(`[BatchDecoder] Processing chunk ${i / CHUNK_SIZE + 1}/${Math.ceil(decodedTxs.length / CHUNK_SIZE)}`);
+
+            await Promise.all(chunk.map(async (tx) => {
+                // Skip if already decoded or missing improved compatibility
+                if (tx.amount_usd || !tx.source_tx_hash || !tx.source_chain_eid) return;
+
+                // Check if chain is supported
+                const chainId = CHAIN_INFO[tx.source_chain_eid]?.chainId;
+                if (!chainId || !ALCHEMY_ENDPOINTS[chainId]) return;
+
+                try {
+                    const decoded = await this._decodeTransactionWithEthers(
+                        tx.source_tx_hash,
+                        chainId,
+                        tx.source_chain_eid
+                    );
+
+                    // Merge decoded fields into transaction object
+                    if (decoded) {
+                        if (decoded.amount_usd) tx.amount_usd = decoded.amount_usd;
+                        if (decoded.amount_tokens) tx.amount_tokens = decoded.amount_tokens;
+                        if (decoded.asset_symbol) tx.asset_symbol = decoded.asset_symbol;
+                        if (decoded.asset_address) tx.asset_address = decoded.asset_address;
+                        if (decoded.dvn_fee_usd) tx.dvn_fee_usd = decoded.dvn_fee_usd;
+                        if (decoded.executor_fee_usd) tx.executor_fee_usd = decoded.executor_fee_usd;
+                        if (decoded.chain_fee_usd) tx.chain_fee_usd = decoded.chain_fee_usd;
+                        if (decoded.total_fee_usd) tx.total_fee_usd = decoded.total_fee_usd;
+                    }
+                } catch (e) {
+                    console.warn(`[BatchDecoder] Failed to decode tx ${tx.source_tx_hash}:`, e);
+                }
+            }));
+
+            // Rate limit delay between chunks
+            if (i + CHUNK_SIZE < decodedTxs.length) {
+                await new Promise(resolve => setTimeout(resolve, DELAY_MS));
+            }
+        }
+
+        console.log(`[BatchDecoder] Completed decoding.`);
+        return decodedTxs;
+    }
+
+    async _getTokenInfo(tokenAddress, chainId) {
+        const cacheKey = `token:${chainId}:${tokenAddress}`;
+        const cached = this.tokenPriceCache.get(cacheKey);
+        if (cached && Date.now() - cached.timestamp < 1000 * 60 * 10) {
+            return cached.data;
+        }
+
+        // Known tokens registry (decimals and prices for reliable decoding)
+        const KNOWN_TOKENS = {
+            // USDC on various chains (6 decimals, $1 stablecoin)
+            '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913': { symbol: 'USDC', decimals: 6, price: 1 }, // Base USDC
+            '0x27a16dc786820b16e5c9028b75b99f6f604b5d26': { symbol: 'USDC', decimals: 6, price: 1 }, // Base USDC bridged
+            '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48': { symbol: 'USDC', decimals: 6, price: 1 }, // Ethereum
+            '0xaf88d065e77c8cc2239327c5edb3a432268e5831': { symbol: 'USDC', decimals: 6, price: 1 }, // Arbitrum
+            '0x0b2c639c533813f4aa9d7837caf62653d097ff85': { symbol: 'USDC', decimals: 6, price: 1 }, // Optimism
+            '0x3c499c542cef5e3811e1192ce70d8cc03d5c3359': { symbol: 'USDC', decimals: 6, price: 1 }, // Polygon
+            '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d': { symbol: 'USDC', decimals: 18, price: 1 }, // BSC
+            // USDT (6 decimals, $1 stablecoin)
+            '0xdac17f958d2ee523a2206206994597c13d831ec7': { symbol: 'USDT', decimals: 6, price: 1 }, // Ethereum
+            '0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9': { symbol: 'USDT', decimals: 6, price: 1 }, // Arbitrum
+            '0xfde4c96c8593536e31f229ea8f37b2ada2699bb2': { symbol: 'USDT', decimals: 6, price: 1 }, // Base
+            // WETH (18 decimals, use native price from CoinGecko)
+            '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2': { symbol: 'WETH', decimals: 18 }, // Ethereum
+            '0x4200000000000000000000000000000000000006': { symbol: 'WETH', decimals: 18 }, // Base/OP
+            '0x82af49447d8a07e3bd95bd0d56f35241523fbab1': { symbol: 'WETH', decimals: 18 }, // Arbitrum
+
+            // FRNT (Wyoming Stable Token) - 18 decimals, $1 stable
+            '0x5e817f2abccb9095585d26c2a3ce234a440574fc': { symbol: 'FRNT', decimals: 18, price: 1 }, // ETH, ARB, OP, BASE, POLY, AVAX (same addr)
+
+            // OUSG (Ondo) - 18 decimals
+            '0x1b19c19393e2d034d8ff31ff34c81252fcbbee92': { symbol: 'OUSG', decimals: 18 }, // ETH, ARB (same addr)
+        };
+
+        const knownToken = KNOWN_TOKENS[tokenAddress.toLowerCase()];
+
+        const info = {
+            symbol: knownToken?.symbol || 'UNKNOWN',
+            decimals: knownToken?.decimals || 18,
+            price: knownToken?.price || 0
+        };
+
+        try {
+            const endpoint = ALCHEMY_ENDPOINTS[chainId];
+
+            // Only call Alchemy if token not in known registry
+            if (!knownToken && endpoint) {
+                const metadataRes = await this._fetchWithTimeout(endpoint, FETCH_TIMEOUT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        jsonrpc: '2.0',
+                        id: 1,
+                        method: 'alchemy_getTokenMetadata',
+                        params: [tokenAddress]
+                    })
+                });
+
+                const metadata = await metadataRes.json();
+                if (metadata.result) {
+                    info.symbol = metadata.result.symbol || 'UNKNOWN';
+                    info.decimals = metadata.result.decimals || 18;
+                }
+            }
+
+            const chainMap = {
+                1: 'ethereum', 56: 'bsc', 137: 'polygon',
+                42161: 'arbitrum', 10: 'optimism', 8453: 'base'
+            };
+            const chainName = chainMap[chainId];
+
+            if (chainName) {
+                const priceRes = await fetch(
+                    `https://coins.llama.fi/prices/current/${chainName}:${tokenAddress}`
+                );
+                const priceData = await priceRes.json();
+                const coinData = priceData.coins?.[`${chainName}:${tokenAddress}`];
+
+                if (coinData) {
+                    // DefiLlama returns complete token info - use as authoritative source
+                    if (coinData.price) info.price = coinData.price;
+                    if (coinData.decimals) info.decimals = coinData.decimals;
+                    if (coinData.symbol && info.symbol === 'UNKNOWN') {
+                        info.symbol = coinData.symbol;
+                    }
+                    console.log(`[TokenInfo] DefiLlama data for ${tokenAddress}:`, coinData);
+                }
+            }
+
+            this.tokenPriceCache.set(cacheKey, {
+                data: info,
+                timestamp: Date.now()
+            });
+
+        } catch (e) {
+            // Continue with defaults
+        }
+
+        return info;
+    }
 
     async getAddressProfile(address) {
         const cacheKey = `addr:${address}`;
         if (this._getFromCache(cacheKey)) return this._getFromCache(cacheKey);
 
         try {
-            let rawTxs = [];
+            // Priority 1: Check known chains for this address (Institutional assets often have multiple)
+            const chainEids = this._findAllChainsForAddress(address);
 
-            // Strategy 1: Try global endpoint with address filter (works for senders)
-            try {
-                // Use /messages/latest as it is the verified working endpoint
-                const globalRes = await fetch(`${LZSCAN_API}/messages/latest?senderAddress=${address}&limit=50`);
-                if (globalRes.ok) {
-                    const globalData = await globalRes.json();
-                    rawTxs = globalData.data || globalData.messages || [];
+            // If no specific chains found, fallback to default logic (returns [30101] or similar)
+            if (chainEids.length === 0) {
+                const defaultEid = this._findChainForAddress(address);
+                if (defaultEid) chainEids.push(defaultEid);
+            }
+
+            // Try all candidate chains
+            for (const eid of chainEids) {
+                try {
+                    const res = await this._fetchWithTimeout(
+                        `${LZSCAN_API}/messages/oapp/${eid}/${address}?limit=100`,
+                        FETCH_TIMEOUT
+                    );
+
+                    if (res.ok) {
+                        const json = await res.json();
+                        const rawTxs = json.data || [];
+
+                        if (rawTxs.length > 0) {
+                            // Found valid data!
+                            let transactions = rawTxs.map(msg => this._normalizeTransaction(msg))
+                                .sort((a, b) => new Date(b.source_timestamp) - new Date(a.source_timestamp));
+
+                            // Decode amounts
+                            transactions = await this._batchDecodeTransactions(transactions);
+
+                            const stats = await this._calculateTraderMetrics(address, transactions);
+
+                            const profile = {
+                                type: 'oapp',
+                                address,
+                                display_name: getAssetDisplayName(address, eid) || null,
+                                transactions,
+                                stats
+                            };
+
+                            this._setCache(cacheKey, profile);
+                            return profile;
+                        }
+                    }
+                } catch (e) {
+                    // Ignore errors for individual chain attempts, continue to next
                 }
-            } catch { /* continue to fallback */ }
-
-            // Strategy 2: Disabled (Legacy endpoint /messages/address/... often 404s on V1)
-            // We rely on Strategy 1 (Global) or Strategy 3 (Chain Scan V2)
-            if (false && rawTxs.length === 0) {
-                // Legacy block preserved but disabled
             }
 
-            // Strategy 3: Scan priority chains
-            if (rawTxs.length === 0) {
-                // Expanded Priority Chains (Top 20 by Volume)
-                const PRIORITY_CHAINS = [
-                    30101, 30102, 30110, 30184, 30109, 30106, 30111, 30112, // Eth, BNB, Arb, Base, Poly, Avax, Opt, Fantom
-                    30165, 30183, 30214, 30243, 30290, 30145, 30121, 30150  // ZkSync, Linea, Scroll, Blast, Mantle, Kava, Harmony, Sol
-                ];
-                rawTxs = await this._scanChainsForAddress(address, PRIORITY_CHAINS);
-            }
+            // Priority 2: Check as Wallet (if OApp lookup failed on all chains)
 
-            if (rawTxs.length === 0) {
-                return { error: "No activity found. This address may not have recent LayerZero transactions." };
-            }
-
-            const transactions = rawTxs.map(msg => this._normalizeTransaction(msg))
-                .sort((a, b) => new Date(b.source_timestamp) - new Date(a.source_timestamp));
-
-            // Detect address type based on transaction patterns
-            let addressType = 'wallet';
-            const isDVN = transactions.some(tx =>
-                tx.required_dvn_addresses?.includes(address.toLowerCase()) ||
-                tx.optional_dvn_addresses?.includes(address.toLowerCase())
-            );
-            const isOApp = transactions.some(tx =>
-                tx.oapp_address?.toLowerCase() === address.toLowerCase()
+            const walletRes = await this._fetchWithTimeout(
+                `${LZSCAN_API}/messages/wallet/${address}?limit=100`,
+                FETCH_TIMEOUT
             );
 
-            if (isDVN) addressType = 'dvn';
-            else if (isOApp) addressType = 'oapp';
+            if (walletRes.ok) {
+                const json = await walletRes.json();
+                const rawTxs = json.data || [];
 
-            const stats = await this._calculateTraderMetrics(address, transactions);
+                if (rawTxs.length > 0) {
+                    let transactions = rawTxs.map(msg => this._normalizeTransaction(msg))
+                        .sort((a, b) => new Date(b.source_timestamp) - new Date(a.source_timestamp));
 
-            const profile = {
-                type: addressType,
-                address,
-                display_name: getAssetDisplayName(address) || null,
-                transactions,
-                stats
-            };
+                    // Decode amounts
+                    transactions = await this._batchDecodeTransactions(transactions);
 
-            this._setCache(cacheKey, profile);
-            return profile;
+                    let addressType = 'wallet';
+                    const isDVN = transactions.some(tx =>
+                        tx.required_dvn_addresses?.includes(address.toLowerCase()) ||
+                        tx.optional_dvn_addresses?.includes(address.toLowerCase())
+                    );
+                    const isOApp = transactions.some(tx =>
+                        tx.oapp_address?.toLowerCase() === address.toLowerCase()
+                    );
+
+                    if (isDVN) addressType = 'dvn';
+                    else if (isOApp) addressType = 'oapp';
+
+                    const stats = await this._calculateTraderMetrics(address, transactions);
+
+                    const profile = {
+                        type: addressType,
+                        address,
+                        display_name: getAssetDisplayName(address) || null,
+                        transactions,
+                        stats
+                    };
+
+                    this._setCache(cacheKey, profile);
+                    return profile;
+                }
+            }
+
+            return await this._fallbackAddressScan(address);
 
         } catch (e) {
-            console.error('Service Error (getAddress):', e);
-            return { error: "Failed to scan address." };
+            console.error('❌ Address error:', e);
+            return { error: "Failed to load address profile" };
         }
     }
 
-    /* -------------------------------------------------------------------------- */
-    /*                            LIVE INTELLIGENCE (GLOBAL)                      */
-    /* -------------------------------------------------------------------------- */
+    _findChainForAddress(address) {
+        const chains = this._findAllChainsForAddress(address);
+        return chains.length > 0 ? chains[0] : 30101;
+    }
 
-    async getLiveFeed(limit = 100) {
-        const cacheKey = 'live_feed_v4';
+    _findAllChainsForAddress(address) {
+        const addr = address.toLowerCase();
+        const chains = new Set();
+
+        // Use imported INSTITUTIONAL_ASSETS directly
+        for (const asset of Object.values(INSTITUTIONAL_ASSETS)) {
+            for (const [eid, assetAddr] of Object.entries(asset.addresses)) {
+                if (assetAddr.toLowerCase() === addr) {
+                    chains.add(parseInt(eid));
+                }
+            }
+        }
+
+        // Use imported DVN_REGISTRY directly
+        for (const dvn of Object.values(DVN_REGISTRY)) {
+            for (const [eid, dvnAddr] of Object.entries(dvn.addresses || {})) {
+                if (dvnAddr.toLowerCase() === addr) {
+                    chains.add(parseInt(eid));
+                }
+            }
+        }
+
+        return Array.from(chains);
+    }
+
+    async _fallbackAddressScan(address) {
+        try {
+            const res = await this._fetchWithTimeout(
+                `${LZSCAN_API}/messages/latest?limit=1000`,
+                15000
+            );
+
+            const json = await res.json();
+            const allMsgs = json.data || [];
+
+            const filtered = allMsgs.filter(msg => {
+                const sender = msg.pathway?.sender?.address?.toLowerCase();
+                const receiver = msg.pathway?.receiver?.address?.toLowerCase();
+                const addr = address.toLowerCase();
+
+                return sender === addr || receiver === addr;
+            });
+
+            if (filtered.length > 0) {
+                let transactions = filtered.map(msg => this._normalizeTransaction(msg));
+
+                // Decode amounts
+                transactions = await this._batchDecodeTransactions(transactions);
+
+                const stats = await this._calculateTraderMetrics(address, transactions);
+
+                return {
+                    type: 'oapp',
+                    address,
+                    transactions,
+                    stats
+                };
+            }
+        } catch (e) {
+            // Fail silently
+        }
+
+        // Fallback: If all scans failed but address is in registry, return basic profile
+        console.log(`[Profile] Fallback scan for ${address}`);
+
+        // Find ANY valid chain ID for this address to look up metadata
+        const knownEids = this._findAllChainsForAddress(address);
+        const fallbackEid = knownEids.length > 0 ? knownEids[0] : 30101;
+
+        const registryAsset = getAssetByAddress(address, fallbackEid);
+
+        if (registryAsset) {
+            return {
+                type: 'oapp',
+                address,
+                display_name: getAssetDisplayName(address, fallbackEid) || registryAsset.name,
+                transactions: [],
+                stats: {
+                    totalVolumeUsd: '0.00',
+                    topRoute: 'No recent activity',
+                    topRouteCount: 0,
+                    topAsset: registryAsset.name,
+                    totalTransactions: 0
+                }
+            };
+        }
+
+        return { error: "No activity found for this address" };
+    }
+
+    async getLiveFeed(limit = 1000) {
+        const cacheKey = `live_feed_${limit}`;
         if (this._getFromCache(cacheKey)) return this._getFromCache(cacheKey);
 
         try {
-            // FIX: Verified endpoint is /messages/latest
-            // This endpoint supports global queries without 404s
-            const url = `${LZSCAN_API}/messages/latest?limit=${limit}`;
-            const res = await fetch(url);
-            const data = await res.json();
-            const allMessages = data.data || data.messages || [];
+            const res = await this._fetchWithTimeout(
+                `${LZSCAN_API}/messages/latest?limit=${limit}`,
+                15000
+            );
+
+            if (!res.ok) {
+                return { recent: [], inflight: [], failed: [], insights: {} };
+            }
+
+            const json = await res.json();
+            const allMessages = json.data || [];
+
+            const normalized = allMessages.map(m => this._normalizeTransaction(m));
 
             const results = {
-                inflight: [], blocked: [], failed: [],
-                recent: allMessages.map(m => this._normalizeTransaction(m)), // Full history including Delivered
-                insights: { topChain: null }
+                recent: normalized,
+                inflight: normalized.filter(tx => tx.delivery_status === 'Inflight'),
+                failed: normalized.filter(tx => tx.delivery_status === 'Failed'),
+                insights: {}
             };
-
-            // Filter by status client-side
-            results.inflight = allMessages.filter(m => (m.status === 'INFLIGHT' || m.status?.name === 'INFLIGHT'))
-                .map(m => this._normalizeTransaction(m))
-                .slice(0, limit);
-
-            results.blocked = allMessages.filter(m => (m.status === 'BLOCKED' || m.status?.name === 'BLOCKED'))
-                .map(m => this._normalizeTransaction(m))
-                .slice(0, limit);
-
-            results.failed = allMessages.filter(m => (m.status === 'FAILED' || m.status?.name === 'FAILED'))
-                .map(m => this._normalizeTransaction(m))
-                .slice(0, limit);
-
-            if (results.inflight.length > 0) {
-                const counts = {};
-                results.inflight.forEach(t => counts[t.source_chain_name] = (counts[t.source_chain_name] || 0) + 1);
-                results.insights.topChain = Object.entries(counts).sort((a, b) => b[1] - a[1])[0]?.[0];
-            }
 
             this._setCache(cacheKey, results, LIVE_TTL);
             return results;
 
         } catch (e) {
-            console.error('Service Error (LiveFeed):', e);
-            return { inflight: [], blocked: [], failed: [], insights: {} };
+            return { recent: [], inflight: [], failed: [], insights: {} };
         }
     }
-
-    async getDvnPulse(dvnAddress) {
-        try {
-            const res = await fetch(`${LZSCAN_API}/messages?limit=100`);
-            const data = await res.json();
-            const msgs = data.messages || data.data || [];
-
-            const relevant = msgs.map(m => this._normalizeTransaction(m))
-                .filter(tx => {
-                    const stack = [...tx.required_dvn_addresses, ...tx.optional_dvn_addresses];
-                    return stack.some(a => a.toLowerCase() === dvnAddress.toLowerCase());
-                });
-
-            if (relevant.length === 0) return null;
-
-            const delivered = relevant.filter(t => t.delivery_status === 'Delivered');
-
-            return {
-                recentTxs: relevant,
-                successRate: (delivered.length / relevant.length) * 100,
-                uniqueChains: new Set(relevant.map(t => t.source_chain_eid)).size
-            };
-        } catch { return null; }
-    }
-
-
-    /* -------------------------------------------------------------------------- */
-    /*                            NORMALIZATION & ENRICHMENT                      */
-    /* -------------------------------------------------------------------------- */
 
     _normalizeTransaction(msg) {
         const src = msg.source?.tx || {};
@@ -250,56 +704,42 @@ class LayerZeroIntelligenceService {
         const pathway = msg.pathway || {};
         const config = msg.config?.outboundConfig || msg.config || {};
 
-        // Status Logic
         let status = 'PENDING';
         if (dst.txHash) status = 'Delivered';
         else if (msg.status === 'FAILED' || msg.status?.name === 'FAILED') status = 'Failed';
         else if (msg.status === 'INFLIGHT' || msg.status?.name === 'INFLIGHT') status = 'Inflight';
-        else if (msg.status === 'BLOCKED' || msg.status?.name === 'BLOCKED') status = 'Blocked';
 
-        // Chain Names Resolution
         const srcEid = pathway.srcEid || pathway.sender?.eid;
         const dstEid = pathway.dstEid || pathway.receiver?.eid;
 
-        const srcName = CHAIN_INFO[srcEid] ? CHAIN_INFO[srcEid].name : (pathway.sender?.chain || `Chain ${srcEid}`);
-        const dstName = CHAIN_INFO[dstEid] ? CHAIN_INFO[dstEid].name : (pathway.receiver?.chain || `Chain ${dstEid}`);
+        // FIXED: Better chain name resolution
+        const srcName = CHAIN_INFO[srcEid]?.name || pathway.sender?.chain || `Chain ${srcEid}`;
+        const dstName = CHAIN_INFO[dstEid]?.name || pathway.receiver?.chain || `Chain ${dstEid}`;
 
         return {
-            // IDs
             message_guid: msg.guid,
             source_tx_hash: src.txHash,
             destination_tx_hash: dst.txHash,
-
-            // Chain Info (BOTH formats for UI compatibility)
             source_chain_eid: srcEid,
             source_chain_name: srcName,
-            source_chain: srcName,  // Alias for TransactionView.jsx
+            source_chain: srcName,
             destination_chain_eid: dstEid,
             destination_chain_name: dstName,
-            destination_chain: dstName,  // Alias for TransactionView.jsx
-
-            // Assets
+            destination_chain: dstName,
             oapp_address: pathway.sender?.address,
             oapp_name: pathway.sender?.name || 'Unknown OApp',
             oapp_display_name: getAssetDisplayName(pathway.sender?.address, srcEid),
-
-            // Setup
             required_dvn_addresses: config.requiredDVNs || [],
             optional_dvn_addresses: config.optionalDVNs || [],
             required_dvn_names: config.requiredDVNNames || [],
             dvn_stack_names: (config.requiredDVNNames || []).join(' + ') || 'Unknown Stack',
-
-            // Metrics
             delivery_status: status,
             source_timestamp: src.blockTimestamp ? new Date(src.blockTimestamp * 1000).toISOString() : new Date().toISOString(),
             latency_seconds: (dst.blockTimestamp && src.blockTimestamp) ? dst.blockTimestamp - src.blockTimestamp : null,
-
-            // Data - Try multiple sources for amount
-            amount_tokens: this._extractAmountFromPayload(src.payload) !== 'Unknown'
-                ? this._extractAmountFromPayload(src.payload)
-                : (BigInt(src.value || '0') > 0n ? (Number(BigInt(src.value) / 10n ** 14n) / 10000).toFixed(4) + ' Native' : 'Unknown'),
-            native_value_wei: src.value || msg.nativeValue || src.options?.lzReceive?.value || '0', // Raw native value from API
-            amount_usd: 0,
+            amount_tokens: null,
+            amount_usd: null,
+            asset_symbol: null,
+            asset_address: null,
             total_fee_usd: null,
             chain_fee_usd: null,
             dvn_fee_usd: null,
@@ -307,243 +747,70 @@ class LayerZeroIntelligenceService {
         };
     }
 
-    async _enrichTransaction(tx) {
-        const enriched = {};
-
-        // 1. Get Asset Price (STRICT SEPARATION)
-        try {
-            const price = await this._getAssetPrice(tx.oapp_address, tx.source_chain_eid);
-
-            if (price > 0 && tx.amount_tokens) {
-                const cleanAmt = tx.amount_tokens.split(' ')[0].replace(/,/g, ''); // "1,000.00 USDC" -> "1000.00"
-                const val = parseFloat(cleanAmt);
-                if (!isNaN(val)) {
-                    enriched.amount_usd = (val * price).toFixed(2);
-                }
-            }
-            enriched.asset_price_usd = price;
-        } catch (e) {
-            console.warn('Price fetch failed', e);
-        }
-
-        // 2. Get Fees (Etherscan)
-        if (tx.source_tx_hash && tx.source_chain_eid) {
-            try {
-                const fees = await this._fetchFeesFromExplorer(tx.source_tx_hash, tx.source_chain_eid);
-                Object.assign(enriched, fees);
-            } catch (e) {
-                console.warn('Fee fetch failed', e);
-            }
-        }
-
-        return enriched;
-    }
-
-    // --- External API Logic ---
-
-    async _getAssetPrice(address, eid) {
-        if (!address || !eid) return 0;
-
-        try {
-            // Map EID to DefiLlama Chain Name
-            const chainMap = {
-                30101: 'ethereum', 30102: 'bsc', 30110: 'arbitrum',
-                30184: 'base', 30109: 'polygon', 30106: 'avax', 30111: 'optimism'
-            };
-
-            const chainName = chainMap[eid];
-            if (chainName) {
-                const res = await fetch(`https://coins.llama.fi/prices/current/${chainName}:${address}`);
-                const data = await res.json();
-                const price = data.coins[`${chainName}:${address}`]?.price;
-                if (price) return price;
-            }
-        } catch (e) { /* ignore */ }
-        return 0;
-    }
-
-    async _fetchFeesFromExplorer(txHash, eid) {
-        const result = {
-            dvn_fee_usd: null, executor_fee_usd: null, chain_fee_usd: null, total_fee_usd: null,
-            dvn_fees_parsed: []
-        };
-
-        const chainInfo = CHAIN_INFO[eid];
-        if (!chainInfo) return result;
-
-        // 1. Get Receipt Logs
-        let logs = null;
-        let gasUsed = 0n;
-        let gasPrice = 0n;
-
-        try {
-            if (chainInfo.useBlockscout) {
-                const r = await fetch(`${chainInfo.explorer}?module=proxy&action=eth_getTransactionReceipt&txhash=${txHash}`);
-                const d = await r.json();
-                if (d.result) {
-                    logs = d.result.logs;
-                    gasUsed = BigInt(d.result.gasUsed);
-                    gasPrice = BigInt(d.result.effectiveGasPrice || d.result.gasPrice);
-                }
-            } else {
-                // Try Etherscan V2
-                const url = `${ETHERSCAN_V2_API}?chainid=${chainInfo.chainId}&module=proxy&action=eth_getTransactionReceipt&txhash=${txHash}&apikey=${ETHERSCAN_KEY}`;
-                const r = await fetch(url);
-                const d = await r.json();
-
-                // Check for V2 error, fallback to legacy
-                if (d.status === "0" && chainInfo.explorer) {
-                    const fbUrl = `${chainInfo.explorer}?module=proxy&action=eth_getTransactionReceipt&txhash=${txHash}&apikey=${this._getApiKeyForChain(chainInfo.chainId)}`;
-                    const r2 = await fetch(fbUrl);
-                    const d2 = await r2.json();
-                    logs = d2.result?.logs;
-                    gasUsed = BigInt(d2.result?.gasUsed || 0);
-                    gasPrice = BigInt(d2.result?.effectiveGasPrice || d2.result?.gasPrice || 0);
-                } else {
-                    logs = d.result?.logs;
-                    gasUsed = BigInt(d.result?.gasUsed || 0);
-                    gasPrice = BigInt(d.result?.effectiveGasPrice || d.result?.gasPrice || 0);
-                }
-            }
-        } catch (e) { return result; }
-
-        if (!logs) return result;
-
-        // 2. Calculate Fees
-        const nativePrice = await this._getNativeTokenPrice(chainInfo.coingeckoId);
-
-        // Chain Fee
-        const costWei = gasUsed * gasPrice;
-        const costEth = Number(costWei) / 1e18;
-        result.chain_fee_usd = (costEth * nativePrice).toFixed(2);
-        let totalFee = parseFloat(result.chain_fee_usd);
-
-        // DVN Fee 
-        const dvnLogs = logs.filter(l => l.topics[0].toLowerCase() === EVENT_SIGNATURES.DVNFeePaid.toLowerCase());
-        let dvnFeeWei = 0n;
-        dvnLogs.forEach(l => dvnFeeWei += BigInt(l.data));
-        result.dvn_fee_usd = ((Number(dvnFeeWei) / 1e18) * nativePrice).toFixed(4);
-        totalFee += parseFloat(result.dvn_fee_usd);
-
-        // Executor Fee
-        const execLogs = logs.filter(l => l.topics[0].toLowerCase() === EVENT_SIGNATURES.ExecutorFeePaid.toLowerCase());
-        let execFeeWei = 0n;
-        execLogs.forEach(l => execFeeWei += BigInt(l.data));
-        result.executor_fee_usd = ((Number(execFeeWei) / 1e18) * nativePrice).toFixed(2);
-        totalFee += parseFloat(result.executor_fee_usd);
-
-        result.total_fee_usd = totalFee.toFixed(2);
-        return result;
-    }
-
-    async _scanChainsForAddress(address, eids) {
-        const promises = eids.map(async (eid) => {
-            try {
-                // Use /messages/latest with srcEid filter for robust scanning
-                const url = `${LZSCAN_API}/messages/latest?senderAddress=${address}&srcEid=${eid}&limit=20`;
-                const res = await fetch(url);
-                if (!res.ok) return [];
-                const json = await res.json();
-                return json.data || json.messages || [];
-            } catch { return []; }
-        });
-        const results = await Promise.all(promises);
-        return results.flat();
-    }
-
-    async _fetchRawMessage(txHash) {
-        try {
-            // Updated Path: Use Global Latest with sourceTxHash filter
-            const res = await fetch(`${LZSCAN_API}/messages/latest?sourceTxHash=${txHash}`);
-            if (res.ok) {
-                const json = await res.json();
-                if (json.data && json.data.length > 0) return json.data[0];
-                if (json.messages && json.messages.length > 0) return json.messages[0];
-            }
-
-            // Fallback 1: Legacy TX endpoint
-            const resLegacy1 = await fetch(`${LZSCAN_API}/messages/tx/${txHash}`);
-            if (resLegacy1.ok) {
-                const json = await resLegacy1.json();
-                return json.data?.[0];
-            }
-
-            // Fallback 2: Legacy short endpoint
-            const resLegacy2 = await fetch(`${LZSCAN_API}/messages/${txHash}`);
-            if (resLegacy2.ok) {
-                const json = await resLegacy2.json();
-                return json.data?.[0];
-            }
-        } catch { return null; }
-        return null;
-    }
-
-    /* -------------------------------------------------------------------------- */
-    /*                            HELPERS                                         */
-    /* -------------------------------------------------------------------------- */
-
-    _extractAmountFromPayload(payload) {
-        if (!payload || !payload.startsWith('0x')) return "Unknown";
-        // Heuristic: Last 32 bytes often uint256 amount
-        try {
-            const clean = payload.replace('0x', '');
-            if (clean.length < 64) return "Unknown";
-            const last64 = clean.slice(-64);
-            const val = BigInt('0x' + last64);
-            if (val > 0n && val < 1000000000000000000000000000n) { // Sanity check
-                return (Number(val) / 1e18).toFixed(4);
-            }
-        } catch { }
-        return "Unknown";
-    }
-
     async _calculateTraderMetrics(address, txs) {
         let totalVol = 0;
-        const routes = {};
+        const routeStats = {};
         const assets = {};
-
-        // Heuristic price for volume
-        const recentEid = txs[0]?.source_chain_eid;
-        const price = await this._getAssetPrice(address, recentEid);
 
         txs.forEach(tx => {
             const r = `${tx.source_chain_name} → ${tx.destination_chain_name}`;
-            routes[r] = (routes[r] || 0) + 1;
 
-            const a = tx.oapp_display_name || 'Unknown';
+            if (!routeStats[r]) {
+                routeStats[r] = { count: 0, volume: 0 };
+            }
+            routeStats[r].count++;
+
+            const a = tx.oapp_display_name || tx.oapp_name || 'Unknown';
             assets[a] = (assets[a] || 0) + 1;
 
-            if (tx.amount_usd) totalVol += parseFloat(tx.amount_usd);
+            if (tx.amount_usd) {
+                const vol = parseFloat(tx.amount_usd);
+                totalVol += vol;
+                routeStats[r].volume += vol;
+            }
         });
 
-        const topRoute = Object.entries(routes).sort((a, b) => b[1] - a[1])[0];
+        // Convert routes to array and sort by volume (desc) then count
+        const routes = Object.entries(routeStats)
+            .map(([route, stats]) => ({
+                route,
+                count: stats.count,
+                volume: stats.volume.toFixed(2)
+            }))
+            .sort((a, b) => parseFloat(b.volume) - parseFloat(a.volume) || b.count - a.count);
+
         const topAsset = Object.entries(assets).sort((a, b) => b[1] - a[1])[0];
 
         return {
-            totalVolumeUsd: totalVol.toFixed(2),
-            topRoute: topRoute?.[0],
-            topRouteCount: topRoute?.[1],
-            topAsset: topAsset?.[0],
-            assetPriceUsd: price
+            totalVolumeUsd: totalVol > 0 ? totalVol.toFixed(2) : '0.00',
+            topRoute: routes[0]?.route || 'N/A',
+            topRouteCount: routes[0]?.count || 0,
+            routes, // Full breakdown
+            topAsset: topAsset?.[0] || 'Unknown',
+            totalTransactions: txs.length
         };
     }
 
-    async _getNativeTokenPrice(id) {
-        if (!id) return 0;
+    async _fetchWithTimeout(url, timeout, options = {}) {
+        const controller = new AbortController();
+        const id = setTimeout(() => controller.abort(), timeout);
+
         try {
-            const r = await fetch(`${COINGECKO_API}?ids=${id}&vs_currencies=usd`);
-            const d = await r.json();
-            return d[id]?.usd || 0;
-        } catch { return 0; }
+            const response = await fetch(url, {
+                ...options,
+                signal: controller.signal
+            });
+            clearTimeout(id);
+            return response;
+        } catch (error) {
+            clearTimeout(id);
+            if (error.name === 'AbortError') {
+                throw new Error('Request timeout');
+            }
+            throw error;
+        }
     }
 
-    _getApiKeyForChain(chainId) {
-        // Basic mapping
-        if (chainId === 56 && process.env.REACT_APP_BSCSCAN_KEY) return process.env.REACT_APP_BSCSCAN_KEY;
-        return ETHERSCAN_KEY;
-    }
-
-    // --- Cache Helpers ---
     _getFromCache(key) {
         const item = this.cache.get(key);
         if (item && Date.now() < item.expiry) return item.value;
@@ -556,3 +823,4 @@ class LayerZeroIntelligenceService {
 }
 
 export const intelligenceService = new LayerZeroIntelligenceService();
+export { LayerZeroIntelligenceService };
