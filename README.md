@@ -7,14 +7,14 @@ An institutional-grade analytics marketplace for LayerZero's Decentralized Verif
 
 ---
 
-## 🚀 The Mission
+##  The Mission
 Institutional builders (Ondo, PayPal, BitGo) need to select secure DVN stacks for billion-dollar assets. **DVN Intelligence** is the "CoinGecko for DVNs"—providing the first comparative marketplace and performance analytics stack for the LayerZero ecosystem.
 
 [Read the Product Manual](docs/MANUAL.md) | [See Architecture Decisions](docs/ARCHITECTURE.md)
 
 ---
 
-## ⚡ Key Features
+##  Key Features
 
 *   **DVN Marketplace:** Compare 40+ DVNs by volume, latency, and jurisdiction (US/EU/APAC).
 *   **Transaction Intelligence:** Decode *any* LayerZero transaction hash to see the exact fees (DVN vs Executor) and amount transferred. 
