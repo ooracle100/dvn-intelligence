@@ -6,7 +6,6 @@ import { getAssetByAddress } from '../utils/assetRegistry';
 import LoadingSpinner from './LoadingSpinner';
 import {
   formatUSD,
-  formatNumber,
   truncateAddress,
   timeAgo,
   getStatusIcon,
@@ -26,7 +25,7 @@ export default function OAppDashboard() {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  
+
   // Filters
   const [filters, setFilters] = useState({
     startDate: '',
@@ -36,22 +35,18 @@ export default function OAppDashboard() {
     destChain: 'All',
     dvnStack: 'All'
   });
-  
+
   const [showExportModal, setShowExportModal] = useState(false);
   const [exporting, setExporting] = useState(false);
 
-  useEffect(() => {
-    loadProfile();
-  }, [address]);
-
-  async function loadProfile() {
+  const loadProfile = React.useCallback(async () => {
     setLoading(true);
     setError('');
 
     try {
       console.log('🏦 Loading OApp profile:', address);
       const result = await intelligenceService.getAddressProfile(address);
-      
+
       if (result.error) {
         setError(result.error);
       } else {
@@ -64,21 +59,25 @@ export default function OAppDashboard() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [address]);
+
+  useEffect(() => {
+    loadProfile();
+  }, [address, loadProfile]);
 
   function handleExport() {
     setExporting(true);
-    
+
     try {
       const filtered = filterTransactions(profile.transactions, filters);
       const asset = getAssetByAddress(address, profile.transactions[0]?.source_chain_eid);
       const oappName = asset?.name || profile.display_name || 'OApp';
-      
+
       const { csvContent, filename } = transactionsToCSV(filtered, {
         ...filters,
         oappName
       });
-      
+
       downloadCSV(csvContent, filename);
       setShowExportModal(false);
     } catch (e) {
@@ -90,7 +89,7 @@ export default function OAppDashboard() {
   }
 
   if (loading) return <LoadingSpinner message="Loading OApp dashboard..." />;
-  
+
   if (error) {
     return (
       <div className="max-w-6xl mx-auto px-4 py-8">
@@ -108,11 +107,11 @@ export default function OAppDashboard() {
   const filtered = filterTransactions(profile.transactions, filters);
   const routeStats = aggregateByRoute(filtered);
   const dvnStats = aggregateByDVNStack(filtered);
-  
+
   const totalVolume = filtered.reduce((sum, tx) => sum + (parseFloat(tx.amount_usd) || 0), 0);
   const deliveredCount = filtered.filter(tx => tx.delivery_status === 'Delivered').length;
   const successRate = calculateSuccessRate(deliveredCount, filtered.length);
-  
+
   const uniqueChains = new Set([
     ...filtered.map(tx => tx.source_chain_name),
     ...filtered.map(tx => tx.destination_chain_name)
@@ -135,11 +134,10 @@ export default function OAppDashboard() {
             </div>
             <div className="flex items-center gap-2">
               <p className="text-gray-400 text-sm font-mono">{truncateAddress(address, 12, 10)}</p>
-              <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                profile.type === 'dvn' ? 'bg-purple-900/30 text-purple-400' :
+              <span className={`px-3 py-1 rounded-full text-xs font-semibold ${profile.type === 'dvn' ? 'bg-purple-900/30 text-purple-400' :
                 profile.type === 'oapp' ? 'bg-blue-900/30 text-blue-400' :
-                'bg-lz-gray-800 text-gray-400'
-              }`}>
+                  'bg-lz-gray-800 text-gray-400'
+                }`}>
                 {profile.type.toUpperCase()}
               </span>
             </div>
@@ -154,7 +152,7 @@ export default function OAppDashboard() {
           <p className="text-2xl font-bold text-white">{formatUSD(totalVolume, true)}</p>
           <p className="text-xs text-gray-500 mt-1">{filtered.length} transactions</p>
         </div>
-        
+
         <div className="bg-lz-gray-900 rounded-lg p-6">
           <p className="text-gray-400 text-sm mb-1">Success Rate</p>
           <p className={`text-2xl font-bold ${successRate >= 95 ? 'text-green-500' : successRate >= 90 ? 'text-yellow-500' : 'text-red-500'}`}>
@@ -162,13 +160,13 @@ export default function OAppDashboard() {
           </p>
           <p className="text-xs text-gray-500 mt-1">{deliveredCount} delivered</p>
         </div>
-        
+
         <div className="bg-lz-gray-900 rounded-lg p-6">
           <p className="text-gray-400 text-sm mb-1">Active Chains</p>
           <p className="text-2xl font-bold text-white">{uniqueChains.size}</p>
           <p className="text-xs text-gray-500 mt-1">Source + Destination</p>
         </div>
-        
+
         <div className="bg-lz-gray-900 rounded-lg p-6">
           <p className="text-gray-400 text-sm mb-1">Top DVN Stack</p>
           <p className="text-sm font-bold text-white truncate">{dvnStats[0]?.name || 'N/A'}</p>
@@ -262,20 +260,20 @@ export default function OAppDashboard() {
           <input
             type="date"
             value={filters.startDate}
-            onChange={(e) => setFilters({...filters, startDate: e.target.value})}
+            onChange={(e) => setFilters({ ...filters, startDate: e.target.value })}
             className="px-3 py-2 bg-lz-gray-800 text-white rounded border border-gray-600 focus:border-blue-500 focus:outline-none text-sm"
             placeholder="Start Date"
           />
           <input
             type="date"
             value={filters.endDate}
-            onChange={(e) => setFilters({...filters, endDate: e.target.value})}
+            onChange={(e) => setFilters({ ...filters, endDate: e.target.value })}
             className="px-3 py-2 bg-lz-gray-800 text-white rounded border border-gray-600 focus:border-blue-500 focus:outline-none text-sm"
             placeholder="End Date"
           />
           <select
             value={filters.status}
-            onChange={(e) => setFilters({...filters, status: e.target.value})}
+            onChange={(e) => setFilters({ ...filters, status: e.target.value })}
             className="px-3 py-2 bg-lz-gray-800 text-white rounded border border-gray-600 focus:border-blue-500 focus:outline-none text-sm"
           >
             <option>All</option>
@@ -285,7 +283,7 @@ export default function OAppDashboard() {
           </select>
           <select
             value={filters.sourceChain}
-            onChange={(e) => setFilters({...filters, sourceChain: e.target.value})}
+            onChange={(e) => setFilters({ ...filters, sourceChain: e.target.value })}
             className="px-3 py-2 bg-lz-gray-800 text-white rounded border border-gray-600 focus:border-blue-500 focus:outline-none text-sm"
           >
             <option>All</option>
@@ -295,7 +293,7 @@ export default function OAppDashboard() {
           </select>
           <select
             value={filters.destChain}
-            onChange={(e) => setFilters({...filters, destChain: e.target.value})}
+            onChange={(e) => setFilters({ ...filters, destChain: e.target.value })}
             className="px-3 py-2 bg-lz-gray-800 text-white rounded border border-gray-600 focus:border-blue-500 focus:outline-none text-sm"
           >
             <option>All</option>
@@ -304,7 +302,7 @@ export default function OAppDashboard() {
             ))}
           </select>
           <button
-            onClick={() => setFilters({startDate: '', endDate: '', status: 'All', sourceChain: 'All', destChain: 'All', dvnStack: 'All'})}
+            onClick={() => setFilters({ startDate: '', endDate: '', status: 'All', sourceChain: 'All', destChain: 'All', dvnStack: 'All' })}
             className="px-3 py-2 bg-lz-gray-800 hover:bg-gray-600 text-white rounded border border-gray-600 transition-colors text-sm"
           >
             Clear Filters
@@ -333,8 +331,8 @@ export default function OAppDashboard() {
               {filtered.slice(0, 50).map((tx, idx) => {
                 const status = getStatusColors(tx.delivery_status);
                 return (
-                  <tr 
-                    key={idx} 
+                  <tr
+                    key={idx}
                     onClick={() => navigate(`/tx/${tx.source_tx_hash}`)}
                     className="border-b border-gray-700/50 hover:bg-lz-gray-800/30 cursor-pointer"
                   >

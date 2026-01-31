@@ -25,7 +25,7 @@ export default function DVNMarketplace() {
       if (dvn.type) types.add(dvn.type);
       if (dvn.infrastructure) infrastructures.add(dvn.infrastructure);
       if (dvn.regulator) regulators.add(dvn.regulator);
-      
+
       // Extract chain EIDs
       Object.keys(dvn.addresses).forEach(eid => chains.add(parseInt(eid)));
     });
@@ -250,7 +250,7 @@ export default function DVNMarketplace() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredDVNs.map(([id, dvn]) => {
                 const chainsCount = Object.keys(dvn.addresses).length;
-                const primaryAddress = Object.values(dvn.addresses)[0];
+
 
                 return (
                   <Link
