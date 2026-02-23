@@ -1,0 +1,272 @@
+[
+    {
+        "address": "0x6c96de32cea08842dcc4058c14d3aaad7fa41dee",
+        "symbol": "USDT0",
+        "name": "Tether USD (LayerZero Omnichain) — Ethereum Adapter",
+        "price_usd": 1.00,
+        "price_source": "stablecoin_peg",
+        "trusted_payload_types": [
+            "STANDARD_OFT",
+            "COMPOSE"
+        ],
+        "confidence": "high",
+        "verification": "Etherscan + Nansen Analysis"
+    },
+    {
+        "address": "0x1f748c76de468e9d11bd340fa9d5cbadf315dfb0",
+        "symbol": "UsdtOFT",
+        "name": "Tether USD OFT",
+        "price_usd": 1.00,
+        "price_source": "stablecoin_peg",
+        "trusted_payload_types": [
+            "STANDARD_OFT",
+            "COMPOSE"
+        ],
+        "confidence": "high",
+        "verification": "Etherscan + Nansen Analysis"
+    },
+    {
+        "address": "0x14e4a1b13bf7f943c8ff7c51fb60fa964a298d92",
+        "symbol": "USDT0",
+        "name": "USDT0 — Stargate Ecosystem Deployment",
+        "price_usd": 1.00,
+        "price_source": "stablecoin_peg",
+        "trusted_payload_types": [
+            "STANDARD_OFT",
+            "COMPOSE"
+        ],
+        "confidence": "high",
+        "verification": "stargate-ecosystem-assets.json"
+    },
+    {
+        "address": "0x77652d5aba086137b595875263fc200182919b92",
+        "symbol": "USDT0",
+        "name": "USDT0 Native Mesh",
+        "price_usd": 1.00,
+        "price_source": "stablecoin_peg",
+        "trusted_payload_types": [
+            "STANDARD_OFT",
+            "COMPOSE"
+        ],
+        "confidence": "high",
+        "verification": "stargate-ecosystem-assets.json"
+    },
+    {
+        "address": "0x5d3a1ff2b6bab83b63cd9ad0787074081a52ef34",
+        "symbol": "USDe",
+        "name": "Ethena USDe (Synthetic Dollar)",
+        "price_usd": 1.00,
+        "price_source": "stablecoin_peg",
+        "trusted_payload_types": [
+            "STANDARD_OFT"
+        ],
+        "confidence": "high",
+        "verification": "stargate-ecosystem-assets.json + Kraken (peg confirmed Feb 2026)",
+        "note": "Ethena synthetic dollar. Maintains $1 peg via delta-hedging."
+    },
+    {
+        "address": "0x6985884c4392d348587b19cb9eaaf157f13271cd",
+        "symbol": "ZRO",
+        "name": "ZRO Token (LayerZero)",
+        "price_usd": 1.84,
+        "price_source": "changelly_avg_feb_2026",
+        "trusted_payload_types": [
+            "STANDARD_OFT"
+        ],
+        "confidence": "medium",
+        "verification": "stargate-ecosystem-assets.json + Changelly avg Feb 2026",
+        "note": "LayerZero governance token. Price volatile — using Feb 2026 average."
+    },
+    {
+        "address": "0x0555e30da8f98308edb960aa94c0db47230d2b9c",
+        "symbol": "WBTC",
+        "name": "Wrapped BTC (wBTC)",
+        "price_usd": 70267.00,
+        "price_source": "coindesk_feb_15_2026",
+        "trusted_payload_types": [
+            "STANDARD_OFT"
+        ],
+        "confidence": "high",
+        "verification": "stargate-ecosystem-assets.json + CoinDesk Feb 15 2026",
+        "note": "1:1 BTC-backed. amount_tokens = BTC count in shared decimals."
+    },
+    {
+        "address": "0xf970706063b7853877f39515c96932d49d5ac9cd",
+        "symbol": "YALA",
+        "name": "Yala Token",
+        "price_usd": 0.001582,
+        "price_source": "coinmarketcap_feb_2026",
+        "trusted_payload_types": [
+            "STANDARD_OFT"
+        ],
+        "confidence": "medium",
+        "verification": "stargate-ecosystem-assets.json + CoinMarketCap Feb 2026"
+    },
+    {
+        "address": "0x79bbf4508b1391af3a0f4b30bb5fc4aa9ab0e07c",
+        "symbol": "ANON",
+        "name": "Hey Anon",
+        "price_usd": 0.65,
+        "price_source": "coingecko_feb_2026",
+        "trusted_payload_types": [
+            "STANDARD_OFT"
+        ],
+        "confidence": "medium",
+        "verification": "stargate-ecosystem-assets.json + CoinGecko Feb 15 2026"
+    },
+    {
+        "address": "0xaf368c91793cb22739386dfcbbb2f1a9e4bcbebf",
+        "symbol": "wstETH",
+        "name": "Wrapped Liquid Staked Ether 2.0",
+        "price_usd": 2500.00,
+        "price_source": "coingecko_feb_2026",
+        "trusted_payload_types": [
+            "STANDARD_OFT"
+        ],
+        "confidence": "high",
+        "verification": "stargate-ecosystem-assets.json + CoinGecko Feb 2026",
+        "note": "Lido's wrapped staked ETH. Price ~$2,500 in Feb 2026."
+    },
+    {
+        "address": "0xa15d5c95b7c0eecac06f673ad390ad6066705af7",
+        "symbol": "NAV",
+        "name": "NAV Finance",
+        "price_usd": 0.001308,
+        "price_source": "coingecko",
+        "trusted_payload_types": [
+            "STANDARD_OFT"
+        ],
+        "confidence": "high",
+        "verification": "BeraScan + CoinGecko",
+        "note": "DeFi yield token. Price verified by user via CoinGecko (2026-02-15)."
+    },
+    {
+        "address": "0x7130e2563974219f3dd152575c7468d7c2ad0d96",
+        "symbol": "REKT",
+        "name": "Rekt",
+        "native_decimals": 4,
+        "price_usd": 0.001,
+        "price_source": "estimate",
+        "trusted_payload_types": [
+            "STANDARD_OFT"
+        ],
+        "confidence": "medium",
+        "verification": "Etherscan (4 decimals confirmed by user)",
+        "note": "Not on CoinGecko. Price is best estimate from Nansen analysis."
+    },
+    {
+        "address": "0xb9c2321bb7d0db468f570d10a424d1cc8efd696c",
+        "symbol": "XAUt0",
+        "name": "Tether Gold (Omnichain)",
+        "price_usd": 2900.00,
+        "price_source": "gold_spot_price",
+        "trusted_payload_types": [
+            "STANDARD_OFT"
+        ],
+        "confidence": "high",
+        "verification": "Etherscan + Nansen Analysis",
+        "note": "CRITICAL: Only STANDARD_OFT payloads are trusted. EXTENDED payloads (231 txs) produce garbage amounts (6T vs correct 23K). 1 token = 1 troy oz gold."
+    },
+    {
+        "address": "0x032d86656db142138ac97d2c5c4e3766e8c0482d",
+        "symbol": "ALLO",
+        "name": "Allora",
+        "native_decimals": 18,
+        "price_usd": 0,
+        "price_source": "not_listed",
+        "trusted_payload_types": [
+            "STANDARD_OFT"
+        ],
+        "confidence": "low",
+        "verification": "BaseScan (18 decimals confirmed by user)",
+        "note": "Not listed on CoinGecko. Volume excluded until price is available."
+    },
+    {
+        "address": "0x6ef2ffb38d64afe18ce782da280b300e358cfeaf",
+        "symbol": "ACU",
+        "name": "Acurast (BSC)",
+        "native_decimals": 12,
+        "price_usd": 0.1139,
+        "price_source": "coingecko",
+        "trusted_payload_types": [
+            "STANDARD_OFT"
+        ],
+        "confidence": "high",
+        "verification": "BscScan (12 decimals) + CoinGecko ($0.1139)",
+        "note": "DePIN infrastructure token."
+    },
+    {
+        "address": "0xc5fed7c8ccc75d8a72b601a66dffd7a489073f0b",
+        "symbol": "ACU",
+        "name": "Acurast (Base)",
+        "native_decimals": 18,
+        "price_usd": 0.1139,
+        "price_source": "coingecko",
+        "trusted_payload_types": [
+            "STANDARD_OFT"
+        ],
+        "confidence": "high",
+        "verification": "BaseScan + CoinGecko ($0.1139)",
+        "note": "Same token as BSC ACU, different chain deployment."
+    },
+    {
+        "address": "0x45a01e4e04f14f7a4a6702c74187c5f6222033cd",
+        "symbol": "USDC.e",
+        "name": "Stargate Bridged USDC",
+        "price_usd": 1.00,
+        "price_source": "stablecoin_peg",
+        "trusted_payload_types": [
+            "STANDARD_OFT"
+        ],
+        "confidence": "high",
+        "verification": "stargate-ecosystem-assets.json"
+    },
+    {
+        "address": "0xaf54be5b6eec24d6bfacf1cce4eaf680a8239398",
+        "symbol": "USDC.e",
+        "name": "Stargate Bridged USDC",
+        "price_usd": 1.00,
+        "price_source": "stablecoin_peg",
+        "trusted_payload_types": [
+            "STANDARD_OFT"
+        ],
+        "confidence": "high",
+        "verification": "stargate-ecosystem-assets.json"
+    },
+    {
+        "address": "0xb1eead6959cb5bb9b20417d6689922523b2b86c3",
+        "symbol": "USDC.e",
+        "name": "Stargate Bridged USDC",
+        "price_usd": 1.00,
+        "price_source": "stablecoin_peg",
+        "trusted_payload_types": [
+            "STANDARD_OFT"
+        ],
+        "confidence": "high",
+        "verification": "stargate-ecosystem-assets.json"
+    },
+    {
+        "address": "0x45f1a95a4d3f3836523f5c83673c797f4d4d263b",
+        "symbol": "USDC.e",
+        "name": "Stargate Bridged USDC",
+        "price_usd": 1.00,
+        "price_source": "stablecoin_peg",
+        "trusted_payload_types": [
+            "STANDARD_OFT"
+        ],
+        "confidence": "high",
+        "verification": "stargate-ecosystem-assets.json"
+    },
+    {
+        "address": "0x12dc9256acc9895b076f6638d628382881e62cee",
+        "symbol": "USDt",
+        "name": "Stargate Bridged USDT",
+        "price_usd": 1.00,
+        "price_source": "stablecoin_peg",
+        "trusted_payload_types": [
+            "STANDARD_OFT"
+        ],
+        "confidence": "high",
+        "verification": "stargate-ecosystem-assets.json"
+    }
+]

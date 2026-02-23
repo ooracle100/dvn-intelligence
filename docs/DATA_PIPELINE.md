@@ -1,19 +1,3 @@
-# DVN Intelligence - Volume Implementation Guide
-
-**Created:** January 28, 2026  
-**Status:** In Progress
-
----
-
-## Problem Statement
-
-Volume shows $0 across all DVN profiles despite individual transaction decoding working correctly.
-
-## Root Cause Analysis
-
-### Finding 1: Snapshot Generator Skips Decoding
-In `scripts/generateDVNSnapshots.js`:
-
 ```javascript
 // Line 120 in normalizeTransaction()
 amountUsd: null, // Would require price lookups - skip for snapshots

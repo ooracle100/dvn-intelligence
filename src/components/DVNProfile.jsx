@@ -1,20 +1,27 @@
 // src/components/DVNProfile.jsx
-// ENHANCED: Real volume calculations, proper chain names, enhanced stacks with metrics
+// ENHANCED: DB-powered routes/stacks, volume chart, real metrics
 
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { DVN_REGISTRY, CHAIN_INFO } from '../utils/dvnRegistry';
 import { intelligenceService } from '../services/IntelligenceService';
 import LoadingSpinner from './LoadingSpinner';
+import {
+  AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+  BarChart, Bar, ComposedChart, Line
+} from 'recharts';
 
 import dvnSnapshots from '../data/dvnSnapshots.json';
 
 function DVNProfile() {
   const { dvnId } = useParams();
-  const dvnData = DVN_REGISTRY[dvnId];
+  // Try direct lookup, then lowercase lookup (registry keys are lowercase)
+  const dvnData = DVN_REGISTRY[dvnId] || DVN_REGISTRY[dvnId?.toLowerCase()];
 
   const [staticMetrics, setStaticMetrics] = useState(null);
   const [liveMetrics, setLiveMetrics] = useState(null);
+  const [history, setHistory] = useState(null);
+  const [analytics, setAnalytics] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
   const [updateError, setUpdateError] = useState(null);
 
@@ -51,10 +58,10 @@ function DVNProfile() {
 
         if (isMounted) {
           setLiveMetrics(metrics);
-          console.log(`[DVNProfile] Live metrics:`, metrics);
+          console.log(`[DVNProfile] Live metrics: `, metrics);
         }
       } catch (error) {
-        console.error(`[DVNProfile] Live fetch failed:`, error);
+        console.error(`[DVNProfile] Live fetch failed: `, error);
         if (isMounted) {
           setUpdateError(error.message);
         }
@@ -66,6 +73,31 @@ function DVNProfile() {
     }
 
     const timer = setTimeout(fetchLiveMetrics, 500);
+
+    // Fetch Historical Data (Once)
+    intelligenceService.getHistoricalDVNStats(dvnId).then(hist => {
+      if (hist) {
+        console.log('[DVNProfile] History loaded:', hist);
+        setHistory(hist);
+      }
+    });
+
+    // Fetch Analytics (routes + stacks from DB)
+    const fetchAnalytics = async () => {
+      try {
+        const res = await fetch(`/api/dvn/${dvnId}/analytics`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data) {
+            console.log('[DVNProfile] Analytics loaded:', data);
+            setAnalytics(data);
+          }
+        }
+      } catch (err) {
+        console.warn('[DVNProfile] Failed to fetch DVN analytics:', err);
+      }
+    };
+    fetchAnalytics();
 
     return () => {
       isMounted = false;
@@ -109,6 +141,50 @@ function DVNProfile() {
     dataSource = 'static';
   }
 
+  // OVERRIDE: Inject Historical Data if available
+  if (history && displayMetrics) {
+    const liveFee = displayMetrics.avgDVNFee;
+    // Use sampled fee from DB (enrich_fees.js), fall back to live feed fee
+    const sampledFee = history.allTime?.avg_dvn_fee_usd;
+    const resolvedFee = sampledFee && sampledFee > 0
+      ? sampledFee.toFixed(2)
+      : (liveFee || null);
+
+    displayMetrics = {
+      ...displayMetrics,
+      totalVolumeUsd: history.allTime.total_volume_usd || displayMetrics.totalVolumeUsd,
+      successRate: ((history.allTime.success_count / history.allTime.tx_count) * 100).toFixed(2),
+      delivered: history.allTime.success_count,
+      failed: history.allTime.failure_count,
+      transactionCount: history.allTime.tx_count,
+      avgDVNFee: resolvedFee,
+      isSampledFee: !!(sampledFee && sampledFee > 0),
+      dataSource: 'history'
+    };
+  }
+
+  // OVERRIDE: Inject DB-powered routes and stacks
+  if (analytics && displayMetrics) {
+    if (analytics.routes && analytics.routes.length > 0) {
+      displayMetrics.topRoutes = analytics.routes.map(r => ({
+        route: `${r.source_chain} → ${r.dest_chain}`,
+        count: r.tx_count,
+        volume: r.volume_usd,
+        successRate: r.success_rate?.toFixed(1),
+        avgLatency: r.avg_latency?.toFixed(1)
+      }));
+    }
+    if (analytics.stacks && analytics.stacks.length > 0) {
+      displayMetrics.enhancedStacks = analytics.stacks.map(s => ({
+        stack: s.stack_dvns,
+        count: s.tx_count,
+        successRate: s.success_rate,
+        totalVolumeUsd: s.volume_usd?.toFixed(2) || '0',
+        avgLatency: s.avg_latency || null
+      }));
+    }
+  }
+
   if (!dvnData) {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center">
@@ -146,6 +222,14 @@ function DVNProfile() {
                 <span>{dvnData.jurisdiction}</span>
                 <span>•</span>
                 <span>{dvnData.infrastructure}</span>
+                {history?.allTime?.success_count && (
+                  <>
+                    <span>•</span>
+                    <span className="text-green-400">
+                      {((history.allTime.success_count / history.allTime.tx_count) * 100).toFixed(2)}% Uptime
+                    </span>
+                  </>
+                )}
               </div>
             </div>
 
@@ -163,6 +247,56 @@ function DVNProfile() {
         {displayMetrics ? (
           <>
             <MetricsOverview metrics={displayMetrics} />
+
+            {/* HISTORICAL CHARTS */}
+            {history && (
+              <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 mb-8">
+                <h2 className="text-xl font-semibold mb-6">Daily Activity (4 Months)</h2>
+                <div className="h-[300px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <ComposedChart data={history.daily.slice().reverse()}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                      <XAxis
+                        dataKey="period_start"
+                        tickFormatter={(unix) => new Date(unix * 1000).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                        stroke="#9ca3af"
+                        fontSize={12}
+                      />
+                      <YAxis yAxisId="left" stroke="#9ca3af" fontSize={12} />
+                      <YAxis
+                        yAxisId="right"
+                        orientation="right"
+                        stroke="#a78bfa"
+                        fontSize={12}
+                        tickFormatter={(v) => {
+                          if (v >= 1e9) return `$${(v / 1e9).toFixed(0)}B`;
+                          if (v >= 1e6) return `$${(v / 1e6).toFixed(0)}M`;
+                          if (v >= 1e3) return `$${(v / 1e3).toFixed(0)}K`;
+                          return `$${v}`;
+                        }}
+                      />
+                      <Tooltip
+                        contentStyle={{ backgroundColor: '#1f2937', border: 'none', borderRadius: '8px' }}
+                        labelFormatter={(unix) => new Date(unix * 1000).toLocaleDateString()}
+                        formatter={(value, name) => {
+                          if (name === 'Volume') {
+                            if (value >= 1e9) return [`$${(value / 1e9).toFixed(2)}B`, name];
+                            if (value >= 1e6) return [`$${(value / 1e6).toFixed(2)}M`, name];
+                            if (value >= 1e3) return [`$${(value / 1e3).toFixed(2)}K`, name];
+                            return [`$${value?.toFixed(2)}`, name];
+                          }
+                          return [value?.toLocaleString(), name];
+                        }}
+                      />
+                      <Bar yAxisId="left" dataKey="tx_count" name="Transactions" fill="#3b82f6" />
+                      <Bar yAxisId="left" dataKey="failure_count" name="Failed" fill="#ef4444" />
+                      <Line yAxisId="right" type="monotone" dataKey="total_volume_usd" name="Volume" stroke="#a78bfa" strokeWidth={2} dot={false} />
+                    </ComposedChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            )}
+
             <PerformanceCharts metrics={displayMetrics} />
             <TopRoutes routes={displayMetrics.topRoutes || []} />
             <EnhancedStacks stacks={displayMetrics.enhancedStacks || displayMetrics.topStacks || []} />
@@ -240,14 +374,29 @@ function MetricsOverview({ metrics }) {
     },
     {
       label: 'Total Volume',
-      value: metrics.totalVolumeUsd ? `$${parseFloat(metrics.totalVolumeUsd).toLocaleString()}` : '$0',
-      subtext: `${metrics.transactionCount?.toLocaleString() || 0} transactions`,
+      value: (() => {
+        const vol = parseFloat(metrics.totalVolumeUsd || 0);
+        if (vol <= 0) return '$0';
+        if (vol >= 1e9) return `$${(vol / 1e9).toFixed(2)}B`;
+        if (vol >= 1e6) return `$${(vol / 1e6).toFixed(2)}M`;
+        if (vol >= 1e3) return `$${(vol / 1e3).toFixed(2)}K`;
+        return `$${vol.toFixed(2)}`;
+      })(),
+      subtext: metrics.dataSource === 'history'
+        ? 'Verified Historical Volume'
+        : `${metrics.transactionCount?.toLocaleString() || 0} recent transactions`,
       color: 'text-purple-400'
     },
     {
       label: 'Avg DVN Fee',
       value: metrics.avgDVNFee ? `$${metrics.avgDVNFee}` : 'N/A',
-      subtext: 'Per transaction',
+      subtext: metrics.isSampledFee
+        ? 'Per transaction (sampled)'
+        : metrics.avgDVNFee
+          ? 'Per transaction (live data)'
+          : metrics.dataSource === 'history'
+            ? 'Fee data requires live lookup'
+            : 'Insufficient data',
       color: 'text-yellow-400'
     }
   ];
@@ -317,22 +466,49 @@ function TopRoutes({ routes }) {
     );
   }
 
+  const fmtVol = (v) => {
+    if (!v || v <= 0) return (
+      <span className="text-gray-600" title="Volume tracking available for Verified OApps only">
+        —
+      </span>
+    );
+    if (v >= 1e9) return `$${(v / 1e9).toFixed(2)}B`;
+    if (v >= 1e6) return `$${(v / 1e6).toFixed(2)}M`;
+    if (v >= 1e3) return `$${(v / 1e3).toFixed(2)}K`;
+    return `$${v.toFixed(2)}`;
+  };
+
   return (
     <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 mb-8">
-      <h2 className="text-xl font-semibold mb-4">Top Routes</h2>
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-xl font-semibold">Top Routes</h2>
+        <span className="text-xs text-gray-500 bg-gray-800 px-2 py-1 rounded border border-gray-700">
+          Last 6 Months
+        </span>
+      </div>
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
             <tr className="border-b border-gray-800">
               <th className="text-left py-3 px-4 text-gray-400 font-medium">Route</th>
               <th className="text-right py-3 px-4 text-gray-400 font-medium">Transactions</th>
+              <th className="text-right py-3 px-4 text-gray-400 font-medium">
+                Volume
+                <span className="ml-1 text-gray-600 cursor-help" title="USD volume is only tracked for Verified OApps (e.g. USDT, WBTC)">ⓘ</span>
+              </th>
+              <th className="text-right py-3 px-4 text-gray-400 font-medium">Success Rate</th>
             </tr>
           </thead>
           <tbody>
             {routes.map((route, idx) => (
               <tr key={idx} className="border-b border-gray-800 last:border-0 hover:bg-gray-800/50">
-                <td className="py-3 px-4">{formatRouteWithNames(route.route)}</td>
-                <td className="py-3 px-4 text-right font-semibold">{route.count.toLocaleString()}</td>
+                <td className="py-3 px-4 flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                  <span className="text-gray-300">{route.route}</span>
+                </td>
+                <td className="py-3 px-4 text-right font-semibold">{route.count?.toLocaleString()}</td>
+                <td className="py-3 px-4 text-right text-purple-400">{fmtVol(route.volume)}</td>
+                <td className="py-3 px-4 text-right text-green-400">{route.successRate ? `${route.successRate}%` : '—'}</td>
               </tr>
             ))}
           </tbody>
@@ -490,7 +666,13 @@ function calculateDVNMetrics(transactions, dvnId, dvnData) {
     }
   });
 
-  const avgDVNFee = feeCount > 0 ? (totalDVNFees / feeCount).toFixed(2) : null;
+  // Use sampled fee from server if available, otherwise fall back to transaction aggregation
+  const sampledFee = dvnData?.allTime?.avg_dvn_fee_usd;
+  const avgDVNFee = sampledFee
+    ? sampledFee.toFixed(2)
+    : (feeCount > 0 ? (totalDVNFees / feeCount).toFixed(2) : null);
+
+  const isSampledFee = !!sampledFee;
 
   const uniqueOApps = new Set(dvnTxs.map(tx => tx.oapp_address).filter(Boolean));
 
@@ -552,6 +734,7 @@ function calculateDVNMetrics(transactions, dvnId, dvnData) {
     avgLatency: avgLatency ? parseFloat(avgLatency.toFixed(1)) : null,
     totalVolumeUsd: totalVolumeUsd.toFixed(2),
     avgDVNFee,
+    isSampledFee,
     uniqueOApps: uniqueOApps.size,
     topRoutes,
     enhancedStacks,

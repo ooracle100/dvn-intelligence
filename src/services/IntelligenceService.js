@@ -63,6 +63,7 @@ class LayerZeroIntelligenceService {
     async search(query) {
         const q = query.trim().toLowerCase();
 
+        // 1. Check DVN name match from local registry
         const dvnInfo = getDVNAddresses(query) || getDVNAddresses(q);
         if (dvnInfo) {
             return {
@@ -74,6 +75,7 @@ class LayerZeroIntelligenceService {
             };
         }
 
+        // 2. Transaction hash → external API
         if (q.startsWith('0x') && q.length === 66) {
             const txResult = await this.getTransaction(q);
             if (!txResult.error) {
@@ -81,11 +83,77 @@ class LayerZeroIntelligenceService {
             }
         }
 
+        // 3. Address → Try local DB first, then external API
         if (q.startsWith('0x') && q.length === 42) {
+            try {
+                const localRes = await this._fetchWithTimeout(`/api/search/${q}`, 3000);
+                if (localRes.ok) {
+                    const localData = await localRes.json();
+                    if (localData.type === 'oapp' && localData.source === 'local_db') {
+                        return { type: 'oapp', address: q, localData };
+                    }
+                    if (localData.type === 'dvn') {
+                        return { type: 'dvn_name', dvnId: localData.dvnId, address: q };
+                    }
+                }
+            } catch (e) { /* fall through to external API */ }
+
             return await this.getAddressProfile(q);
         }
 
-        return { error: "Invalid format" };
+        // 4. Token name/symbol search → local API (searches verified registry + Stargate + manual)
+        if (q.length >= 2) {
+            try {
+                const localRes = await this._fetchWithTimeout(`/api/search/${encodeURIComponent(q)}`, 3000);
+                if (localRes.ok) {
+                    const localData = await localRes.json();
+
+                    // Verified OApps (priced tokens — highest quality)
+                    if (localData.type === 'token_matches' && localData.results?.length > 0) {
+                        const first = localData.results[0];
+                        return { type: 'oapp', address: first.address, display_name: `${first.symbol} - ${first.name}` };
+                    }
+
+                    // Stargate Ecosystem (1,500+ tokens grouped by issuer)
+                    if (localData.type === 'ecosystem_matches' && localData.results?.length > 0) {
+                        const first = localData.results[0];
+                        // Use the first OFT address from the first chain deployment
+                        const firstAddr = first.addresses?.[0]?.oftAddress;
+                        if (firstAddr) {
+                            return {
+                                type: 'oapp',
+                                address: firstAddr,
+                                display_name: `${first.symbol} - ${first.name} (${first.issuer})`,
+                                ecosystem_data: first
+                            };
+                        }
+                    }
+
+                    // Manual Registry (institutional tokens: FRNT, OUSG, BUIDL)
+                    if (localData.type === 'institutional_matches' && localData.results?.length > 0) {
+                        const first = localData.results[0];
+                        // Get the first address from the addresses object
+                        const firstAddr = Object.values(first.addresses)?.[0];
+                        if (firstAddr) {
+                            return {
+                                type: 'oapp',
+                                address: firstAddr,
+                                display_name: `${first.symbol} - ${first.name} (${first.issuer})`,
+                                institutional_data: first
+                            };
+                        }
+                    }
+
+                    // DVN name matches
+                    if (localData.type === 'dvn_matches' && localData.results?.length > 0) {
+                        const first = localData.results[0];
+                        return { type: 'dvn_name', dvnId: first.dvn_id, name: first.dvn_name };
+                    }
+                }
+            } catch (e) { /* fall through */ }
+        }
+
+        return { error: "No results found. Try a contract address (0x...), DVN name, or token symbol." };
     }
 
     _getDVNIdFromName(name) {
@@ -789,6 +857,61 @@ class LayerZeroIntelligenceService {
             topAsset: topAsset?.[0] || 'Unknown',
             totalTransactions: txs.length
         };
+    }
+
+    // --- HISTORICAL DATA INTEGRATION (NEW) ---
+
+    async getHistoricalDVNStats(dvnIdOrAddress) {
+        try {
+            // Resolve DVN ID to address if needed
+            let address = dvnIdOrAddress;
+            if (dvnIdOrAddress && !dvnIdOrAddress.startsWith('0x')) {
+                // It's a DVN ID like "nethermind", resolve to address
+                const dvnData = DVN_REGISTRY[dvnIdOrAddress];
+                if (dvnData?.addresses) {
+                    // addresses is an object { chainId: address }, get first one
+                    const addrs = Object.values(dvnData.addresses);
+                    if (addrs.length > 0) {
+                        address = addrs[0];
+                    } else {
+                        console.warn(`[getHistoricalDVNStats] No addresses for DVN: ${dvnIdOrAddress}`);
+                        return null;
+                    }
+                } else {
+                    console.warn(`[getHistoricalDVNStats] DVN not found in registry: ${dvnIdOrAddress}`);
+                    return null;
+                }
+            }
+
+            const res = await this._fetchWithTimeout(`/api/dvn/${address}/history`, 5000);
+            if (!res.ok) return null;
+            return await res.json();
+        } catch (e) {
+            console.warn('⚠️ Failed to fetch historical DVN stats (is backend running?):', e);
+            return null;
+        }
+    }
+
+    async getHistoricalOAppStats(address) {
+        try {
+            const res = await this._fetchWithTimeout(`/api/oapp/${address}/history`, 5000);
+            if (!res.ok) return null;
+            return await res.json();
+        } catch (e) {
+            console.warn('⚠️ Failed to fetch historical OApp stats (is backend running?):', e);
+            return null;
+        }
+    }
+
+    async getHistoricalWhales(address) {
+        try {
+            const res = await this._fetchWithTimeout(`/api/oapp/${address}/whales`, 5000);
+            if (!res.ok) return [];
+            return await res.json();
+        } catch (e) {
+            console.warn('⚠️ Failed to fetch whales:', e);
+            return [];
+        }
     }
 
     async _fetchWithTimeout(url, timeout, options = {}) {

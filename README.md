@@ -1,73 +1,87 @@
 # DVN Intelligence Platform
 
-An institutional-grade analytics marketplace for LayerZero's Decentralized Verifier Networks (DVNs).
+The first analytics tool for LayerZero's Decentralized Verifier Networks. No direct competitor exists.
 
-**Current Version:** MVP (85% Complete)  
-**Status:** Functional Core + Real-time Transaction Decoding
-
----
-
-##  The Mission
-Institutional builders (Ondo, PayPal, BitGo) need to select secure DVN stacks for billion-dollar assets. **DVN Intelligence** is the "CoinGecko for DVNs"—providing the first comparative marketplace and performance analytics stack for the LayerZero ecosystem.
-
-[Read the Product Manual](docs/MANUAL.md) | [See Architecture Decisions](docs/ARCHITECTURE.md)
+**Live:** [dvn-intelligence.vercel.app](https://dvn-intelligence.vercel.app)
 
 ---
 
-##  Key Features
+## What It Does
 
-*   **DVN Marketplace:** Compare 40+ DVNs by volume, latency, and jurisdiction (US/EU/APAC).
-*   **Transaction Intelligence:** Decode *any* LayerZero transaction hash to see the exact fees (DVN vs Executor) and amount transferred. 
-    *   *Powered by Alchemy + ethers.js*
-*   **OApp Dashboards:** Monitor performance for specific OApps (like FRNT or Merlin).
-*   **Institutional Metrics:** "Total Volume Secured" calculated via snapshot engine.
+Institutional teams (Ondo, PayPal, BitGo, Wyoming) deploying cross-chain assets on LayerZero must choose which DVNs verify their transactions. There is no public data on DVN performance. This tool fills that gap.
+
+- **DVN Marketplace** — Compare 68 DVNs by volume secured, transaction count, latency, and jurisdiction
+- **Transaction Decoder** — Paste any LayerZero tx hash → get decoded amounts, fees (DVN/executor/gas), and route details
+- **OApp Dashboards** — Per-token analytics for USDC, USDT0, FRNT, OUSG, and 1,500+ ecosystem assets
+- **Search** — Find any asset by name, symbol, issuer, or address across verified OApps + Stargate ecosystem
+
+## Data Scale
+
+| Metric | Value |
+|--------|-------|
+| Transactions processed | 3,029,343 |
+| DVNs tracked | 68 |
+| Blockchains covered | 20+ |
+| Ecosystem assets searchable | 1,544 |
+| Verified OApps with pricing | 20 |
+
+## Architecture
+
+```
+React Frontend (localhost:3000)
+  ├── IntelligenceService.js → LayerZero Scan API + Alchemy (live decoding)
+  ├── DVN Registry (68 DVNs, all chains)
+  └── Asset Registry (institutional tokens)
+
+Express Backend (localhost:3001)
+  ├── SQLite DB (3M transactions, WAL mode)
+  ├── Search: verified_oapps.json + stargate-ecosystem-assets.json + manual registry
+  ├── DVN aggregate metrics
+  └── OApp history endpoints
+```
+
+## Tech Stack
+
+**Frontend:** React 18, vanilla CSS
+**Backend:** Node.js, Express, better-sqlite3
+**Data Sources:** LayerZero Scan API, Alchemy (receipt decoding), DeFiLlama (prices), CoinGecko
+**Deployment:** Vercel (frontend), local server (backend)
+
+## Quick Start
+
+```bash
+# Install
+npm install
+
+# Frontend (port 3000)
+npm start
+
+# Backend (port 3001) — separate terminal
+node server/server.js
+```
+
+Requires `.env` with `REACT_APP_ALCHEMY_KEY`.
+
+## Key Technical Decisions
+
+1. **Hybrid data model** — Live API calls for transaction decoding, pre-computed snapshots for aggregate metrics. Pure-live is too slow for 3M rows.
+2. **Payload classification** — 4 types (STANDARD_OFT, COMPOSE, LEGACY, EXTENDED). EXTENDED payloads caused $6T phantom volume until filtered.
+3. **Volume attribution** — `amount_tokens × price_usd`, filtered by trusted payload types only. Every dollar traceable to a verified price source.
+4. **Gas-based fees** — `gasUsed × effectiveGasPrice`, not Transfer logs. Transfer logs include routed liquidity, inflating fees by 1000x+.
+
+## Documentation
+
+| Doc | Purpose |
+|-----|---------|
+| [Product Manual](docs/MANUAL.md) | Feature guide and project context |
+| [Architecture](docs/ARCHITECTURE.md) | Design decisions and pivots |
+| [Data Pipeline](docs/DATA_PIPELINE.md) | How snapshot generation works |
+
+## Related Work
+
+- [Nansen DVN Analysis](https://github.com/ooracle100/nansen-dvn-analysis) — $18.2B verified volume forensic analysis
+- [Tempo Fee Analysis](https://github.com/ooracle100/tempo-fee-analysis) — FeeManager routing bug discovery on Tempo testnet
 
 ---
 
-## 🛠️ Tech Stack
-
-*   **Frontend:** React 18, Tailwind CSS
-*   **Data:** LayerZero Scan API + Alchemy (for decoding) + DeFiLlama (Prices)
-*   **Data Strategy:** Hybrid.
-    *   **Live:** Transaction details & OApp lookups.
-    *   **Snapshots:** Historical volume aggregation (generated weekly).
-
-[View Data Pipeline Details](docs/DATA_PIPELINE.md)
-
----
-
-## 🚦 Quick Start
-
-1.  **Install Dependencies:**
-    ```bash
-    npm install
-    ```
-
-2.  **Environment Setup:**
-    Create `.env`:
-    ```bash
-    REACT_APP_ALCHEMY_KEY=your_alchemy_key_here
-    ```
-
-3.  **Run Development Server:**
-    ```bash
-    npm start
-    ```
-    Open [http://localhost:3000](http://localhost:3000)
-
-4.  **Update Data Snapshots (Optional):**
-    ```bash
-    node scripts/generateDVNSnapshots.js
-    ```
-
----
-
-## 📚 Documentation
-
-*   **[Product Manual](docs/MANUAL.md):** Complete feature guide and project context.
-*   **[Architecture Check](docs/ARCHITECTURE.md):** Why we pivoted from "Real-time Volume" to "DVN Marketplace".
-*   **[DVN Selection Guide](docs/DVN_Selection_Guide.md):** User guide for institutional DVN selection.
-*   **[Data Pipeline](docs/DATA_PIPELINE.md):** How the snapshot generator works.
-
-*Looking for old docs? Check `docs/archive/`.*
- 
+Built by [Marvin Ohanwe](https://github.com/ooracle100)

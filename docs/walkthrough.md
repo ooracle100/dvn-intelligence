@@ -1,38 +1,88 @@
-# DVN Intelligence - Advisor Report & Walkthrough
+# Historical Data Infrastructure - Walkthrough
 
-## Executive Summary
-This report validates the deployment of the **"Performance Intelligence"** suite. We have successfully transitioned the tool from a "static explorer" to a "decision-making engine" by implementing real-time asset valuation and route efficiency benchmarking.
+## ✅ Status: WORKING
 
-## Key Deliverables
+Successfully tested and validated the historical data infrastructure.
 
-### 1. Magnitude Awareness (Asset Valuation)
-**Objective**: Transform abstract token amounts into concrete USD volume.
-**Implementation**: 
-- Integrated **DeFiLlama Price API** to fetch real-time prices for any OApp/Token address.
-- Configured dynamic mapping for 10+ LayerZero chains (Ethereum, Arbitrum, Base, etc.).
-- **Result**: Users now see **"$1.2M Secured"** instead of just "1,000 Tokens".
+---
 
-### 2. The Efficiency Matrix (Performance Intelligence)
-**Objective**: Provide actionable "Why" data for builders and investors.
-**Implementation**:
-- New component `EfficiencyMatrix` aggregates 30-day transaction history.
-- Calculates **Avg Latency**, **Avg Cost**, and **Reliability** per route.
-- **Result**: Builders can instantly see which routes are underperforming (Red highlight for slow/expensive paths).
+## Test Results (Nethermind DVN)
 
-### 3. UX & Data Integrity Fixes
-- **Amount vs Value**: Split UI to distinct fields for precision.
-- **DVN Fees**: Fixed regression to ensure individual DVN fees and counts are visible.
-- **Navigation**: Fixed "Home" button state clearing.
+| Metric | Value |
+|--------|-------|
+| Messages Retrieved | 42 |
+| Success Rate | 95.24% |
+| Unique OApps | 9 |
+| Avg Latency | 181.7s |
+| Database Records | 42 transactions, 116 DVN attributions |
 
-## Strategic Roadmap (Next Steps)
-To fully capture the "Institutional Grade" market (as per Ondo Finance context):
+---
 
-1.  **Risk Profiling (Phase 2)**:
-    - Add "DVN Diversity Score" (e.g., "Warning: 3/4 DVNs are controlled by 1 entity").
-    - Integration with L2Beat for "Stage of Decentralization" warnings.
+## Key Finding: DVN Volume Varies Dramatically
 
-2.  **Competitor Benchmarking**:
-    - "Your route (Poly->Base) is 12s slower than the industry average."
+From analyzing latest 1000 messages:
 
-## Conclusion
-The tool is now ready for beta demonstration. It answers the critical question: *"Is my cross-chain infrastructure efficient and secure?"* with hard data.
+| DVN | Required | Optional | Total |
+|-----|----------|----------|-------|
+| LayerZero Labs | 697 | 4 | 701 |
+| Nethermind | 231 | 73 | 304 |
+| Luganodes | 1 | 51 | 52 |
+| P2P | 22 | 68 | 90 |
+| Google | 20 | 2 | 22 |
+| Deutsche Telekom | 0 | 0 | 0 |
+
+**Deutsche Telekom has very low transaction volume** - likely used only by specific OApps.
+
+---
+
+## Usage
+
+```bash
+# Test mode (7 days, single DVN)
+node server/scripts/run-backfill.js --dvn=nethermind --days=7
+
+# Force re-run
+node server/scripts/run-backfill.js --dvn=google-cloud --force
+
+# Production (all DVNs)
+node server/scripts/run-backfill.js --all
+```
+
+---
+
+## Files Created
+
+| File | Purpose |
+|------|---------|
+| `server/database/schema.sql` | Database schema |
+| `server/database/db.js` | Database client |
+| `server/services/lzScanClient.js` | REST API client |
+| `server/services/backfill.js` | Backfill orchestration |
+| `server/scripts/run-backfill.js` | CLI interface |
+| `docs/DATA_INFRASTRUCTURE.md` | Full documentation |
+
+---
+
+## Next Steps
+
+1. **Run full backfill** for top DVNs (LayerZero Labs, Nethermind, Google, etc.)
+2. **Price oracle integration** - Enrich transactions with USD values
+3. **Frontend integration** - Display historical metrics in DVN profiles
+4. **Continuous updates** - Set up cron job for ongoing data collection
+
+# Intelligence Platform Update (V2) - "The Deep Data Upgrade"
+
+## 1. OApp Intelligence (Institutional View)
+The **OApp Dashboard** has been transformed from a simple scanner to a compliance tool.
+*   **6-Month Volume Trend:** A visual area chart showing daily volume, calculated from 3M+ backfilled records.
+*   **Institutional "Whale Watch":** A new section listing the top 50 transactions by USD value, irrespective of time.
+*   **Compliance Export:** A new "Export CSV" button that streams the full historical dataset for off-chain auditing.
+
+## 2. DVN Performance (Marketplace View)
+The **DVN Profile** now features "Verified Metrics" that override live snapshots when available.
+*   **True Uptime:** Calculated as `(Success / Total Requests)` over the full history (e.g., 99.98%).
+*   **Daily Activity:** A bar chart showing daily request volume and failure rates.
+
+## 3. Architecture
+*   **Dual-Pipeline:** Frontend fetches "Live Status" from LayerZero API and "Deep History" from our new local aggregated SQLite DB.
+*   **Backend:** A dedicated Express server (`server.js`) runs on port 3001 to serve these analytics.

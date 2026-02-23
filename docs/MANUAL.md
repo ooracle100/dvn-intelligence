@@ -67,7 +67,7 @@ For **USDY** (yield-bearing US Treasury token):
 
 | Metric | April 2024 | Q4 2024 | Growth |
 |--------|------------|---------|--------|
-| Total DVNs | 30+ | 50+ | +70% |
+| Total DVNs | 30+ | 50+ | +% |
 | New DVNs (Q4) | N/A | Nodekit, Superform, Nodit | - |
 | LayerZero TVL | N/A | $90B secured | - |
 | Applications | N/A | 600+ | - |

@@ -12,9 +12,9 @@ import DVNProfile from './components/DVNProfile';
 function App() {
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-gray-900">
+      <div className="min-h-screen bg-[#1e1e1e]">
         {/* Header/Navbar */}
-        <header className="bg-gray-800 border-b border-gray-700 sticky top-0 z-50">
+        <header className="bg-lz-gray-900 border-b border-gray-700 sticky top-0 z-50">
           <div className="max-w-7xl mx-auto px-4 py-4">
             <div className="flex items-center justify-between gap-4">
               {/* Logo */}
@@ -55,7 +55,7 @@ function App() {
             <Route path="/oapp/:address" element={<OAppDashboard />} />
             <Route path="/dvn-marketplace" element={<DVNMarketplace />} />
             <Route path="/dvn/:dvnId" element={<DVNProfile />} />
-            
+
             {/* 404 Not Found */}
             <Route path="*" element={
               <div className="max-w-4xl mx-auto px-4 py-16 text-center">
@@ -68,7 +68,7 @@ function App() {
         </main>
 
         {/* Footer */}
-        <footer className="bg-gray-800 border-t border-gray-700 mt-16">
+        <footer className="bg-lz-gray-900 border-t border-gray-700 mt-16">
           <div className="max-w-7xl mx-auto px-4 py-8">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
               {/* About */}
