@@ -16,12 +16,10 @@ import {
   transactionsToCSV,
   downloadCSV,
   aggregateByRoute,
-  aggregateByDVNStack,
-  CHAIN_NAMES
+  aggregateByDVNStack
 } from '../utils/helpers';
 import {
-  AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  BarChart, Bar, Cell
+  AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts';
 
 export default function OAppDashboard() {

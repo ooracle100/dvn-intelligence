@@ -78,7 +78,7 @@ This project now includes a built-in Error Boundary and clear logging so issues 
 2. Check Vercel dashboard → Logs tab (shows every request and error).
 3. For backend issues, check the terminal where `node server/server.js` is running.
 
-When reporting an issue, just send me (or your AI) the exact error message + steps to reproduce. The Error Boundary will catch most frontend crashes gracefully.
+When reporting an issue, simply send any LLM of your choice the error message + steps to reproduce. The Error Boundary will catch most frontend crashes gracefully.
 
 This setup lets me debug like a pro even though I build with English + AI.
 

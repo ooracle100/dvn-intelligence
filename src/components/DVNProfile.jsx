@@ -7,8 +7,8 @@ import { DVN_REGISTRY, CHAIN_INFO } from '../utils/dvnRegistry';
 import { intelligenceService } from '../services/IntelligenceService';
 import LoadingSpinner from './LoadingSpinner';
 import {
-  AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  BarChart, Bar, ComposedChart, Line
+  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+  Bar, ComposedChart, Line
 } from 'recharts';
 
 import dvnSnapshots from '../data/dvnSnapshots.json';
@@ -617,12 +617,6 @@ function DetailRow({ label, value }) {
   );
 }
 
-function formatRouteWithNames(route) {
-  const [srcEid, dstEid] = route.split('-').map(Number);
-  const srcName = CHAIN_INFO[srcEid]?.name || `Chain ${srcEid}`;
-  const dstName = CHAIN_INFO[dstEid]?.name || `Chain ${dstEid}`;
-  return `${srcName} → ${dstName}`;
-}
 
 function calculateDVNMetrics(transactions, dvnId, dvnData) {
   const dvnAddresses = Object.values(dvnData.addresses).map(a => a.toLowerCase());
