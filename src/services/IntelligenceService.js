@@ -169,6 +169,10 @@ class LayerZeroIntelligenceService {
     }
 
     async getTransaction(txHash) {
+        console.log(`🔍 DVN Intelligence: Fetching transaction ${txHash}...`);
+        if (process.env.NODE_ENV === 'production') {
+            console.log(`🔍 [Production] Fetching DVN transaction data for ${txHash}`);
+        }
         const cacheKey = `tx:${txHash}`;
         if (this._getFromCache(cacheKey)) return this._getFromCache(cacheKey);
 
@@ -210,7 +214,10 @@ class LayerZeroIntelligenceService {
             return transaction;
 
         } catch (e) {
-            console.error('❌ Transaction error:', e);
+            console.error('🚨 DVN Intelligence: Transaction error:', e);
+            if (process.env.NODE_ENV === 'production') {
+                console.error(`🚨 [Production] DVN Intelligence: Transaction error fetching ${txHash}:`, e.message);
+            }
             return { error: "Failed to load transaction" };
         }
     }
@@ -532,6 +539,10 @@ class LayerZeroIntelligenceService {
     }
 
     async getAddressProfile(address) {
+        console.log(`🔍 DVN Intelligence: Fetching profile for address ${address}...`);
+        if (process.env.NODE_ENV === 'production') {
+            console.log(`🔍 [Production] Fetching profile for ${address}`);
+        }
         const cacheKey = `addr:${address}`;
         if (this._getFromCache(cacheKey)) return this._getFromCache(cacheKey);
 
@@ -632,7 +643,10 @@ class LayerZeroIntelligenceService {
             return await this._fallbackAddressScan(address);
 
         } catch (e) {
-            console.error('❌ Address error:', e);
+            console.error('🚨 DVN Intelligence: Address profile error:', e);
+            if (process.env.NODE_ENV === 'production') {
+                console.error(`🚨 [Production] DVN Intelligence: Error loading profile for ${address}:`, e.message);
+            }
             return { error: "Failed to load address profile" };
         }
     }
@@ -733,6 +747,10 @@ class LayerZeroIntelligenceService {
     }
 
     async getLiveFeed(limit = 1000) {
+        console.log(`📡 DVN Intelligence: Fetching live feed...`);
+        if (process.env.NODE_ENV === 'production') {
+            console.log(`📡 [Production] Fetching live feed`);
+        }
         const cacheKey = `live_feed_${limit}`;
         if (this._getFromCache(cacheKey)) return this._getFromCache(cacheKey);
 

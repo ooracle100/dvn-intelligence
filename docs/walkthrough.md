@@ -63,26 +63,28 @@ node server/scripts/run-backfill.js --all
 
 ---
 
-## Next Steps
+## Next Steps (Updated)
 
-1. **Run full backfill** for top DVNs (LayerZero Labs, Nethermind, Google, etc.)
-2. **Price oracle integration** - Enrich transactions with USD values
-3. **Frontend integration** - Display historical metrics in DVN profiles
-4. **Continuous updates** - Set up cron job for ongoing data collection
+1. **Continuous updates** - Set up cron job for ongoing data collection.
+2. **Further DVN Onboarding** - Continue monitoring and adding new DVNs to our current 68 DVN registry.
+3. **Advanced Filtering** - Add more granular filtering by specific source/destination chains in the dashboard.
 
 # Intelligence Platform Update (V2) - "The Deep Data Upgrade"
 
-## 1. OApp Intelligence (Institutional View)
+## 1. OApp Intelligence & Search (Institutional View)
 The **OApp Dashboard** has been transformed from a simple scanner to a compliance tool.
 *   **6-Month Volume Trend:** A visual area chart showing daily volume, calculated from 3M+ backfilled records.
 *   **Institutional "Whale Watch":** A new section listing the top 50 transactions by USD value, irrespective of time.
 *   **Compliance Export:** A new "Export CSV" button that streams the full historical dataset for off-chain auditing.
+*   **Expanded Search & Decoding:** Search functionality now covers 1,500+ ecosystem assets. Integrated Alchemy for live batch transaction decoding (amounts, fees, gas).
 
 ## 2. DVN Performance (Marketplace View)
 The **DVN Profile** now features "Verified Metrics" that override live snapshots when available.
 *   **True Uptime:** Calculated as `(Success / Total Requests)` over the full history (e.g., 99.98%).
 *   **Daily Activity:** A bar chart showing daily request volume and failure rates.
+*   **Massive Marketplace Expansion:** The DVN Registry has been expanded to natively track 68 DVNs across 20+ blockchains.
 
 ## 3. Architecture
 *   **Dual-Pipeline:** Frontend fetches "Live Status" from LayerZero API and "Deep History" from our new local aggregated SQLite DB.
 *   **Backend:** A dedicated Express server (`server.js`) runs on port 3001 to serve these analytics.
+*   **Price Oracles:** Live price integration from DeFiLlama and CoinGecko to definitively attribute USD value to cross-chain volume.

@@ -69,6 +69,19 @@ Requires `.env` with `REACT_APP_ALCHEMY_KEY`.
 3. **Volume attribution** — `amount_tokens × price_usd`, filtered by trusted payload types only. Every dollar traceable to a verified price source.
 4. **Gas-based fees** — `gasUsed × effectiveGasPrice`, not Transfer logs. Transfer logs include routed liquidity, inflating fees by 1000x+.
 
+## Debugging in Production
+
+This project now includes a built-in Error Boundary and clear logging so issues are easy to spot even when the app is live on Vercel.
+
+**If something breaks:**
+1. Go to the live site → right-click → Inspect → Console tab (copy any red errors).
+2. Check Vercel dashboard → Logs tab (shows every request and error).
+3. For backend issues, check the terminal where `node server/server.js` is running.
+
+When reporting an issue, just send me (or your AI) the exact error message + steps to reproduce. The Error Boundary will catch most frontend crashes gracefully.
+
+This setup lets me debug like a pro even though I build with English + AI.
+
 ## Documentation
 
 | Doc | Purpose |

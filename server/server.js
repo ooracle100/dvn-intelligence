@@ -546,6 +546,15 @@ app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', database: !!db });
 });
 
+// Global Error Handler
+app.use((err, req, res, next) => {
+    console.error('🚨 DVN Intelligence Server Error:', err.stack);
+    if (process.env.NODE_ENV === 'production') {
+        console.error('🚨 [Production] Caught error:', err.message);
+    }
+    res.status(500).json({ error: 'Something went wrong on the server', details: err.message });
+});
+
 app.listen(PORT, () => {
     console.log(`🚀 API Server running on http://localhost:${PORT}`);
     console.log(`📡 Endpoints: /api/dvn/:addr/history, /api/oapp/:addr/history`);

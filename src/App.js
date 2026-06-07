@@ -8,10 +8,12 @@ import TransactionView from './components/TransactionView';
 import OAppDashboard from './components/OAppDashboard';
 import DVNMarketplace from './components/DVNMarketplace';
 import DVNProfile from './components/DVNProfile';
+import ErrorBoundary from './components/ErrorBoundary';
 
 function App() {
   return (
-    <BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter>
       <div className="min-h-screen bg-[#1e1e1e]">
         {/* Header/Navbar */}
         <header className="bg-lz-gray-900 border-b border-gray-700 sticky top-0 z-50">
@@ -154,7 +156,8 @@ function App() {
           </div>
         </footer>
       </div>
-    </BrowserRouter>
+      </BrowserRouter>
+    </ErrorBoundary>
   );
 }
 
